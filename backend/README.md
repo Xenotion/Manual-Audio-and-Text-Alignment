@@ -10,7 +10,7 @@ api-project/Scripts/activate
 ```
 source api-project/bin/activate
 ```
-# ---------------------------------------------------------------------------
+-----
 # create a new app
 ```
 python3 manage.py startapp {app name}
