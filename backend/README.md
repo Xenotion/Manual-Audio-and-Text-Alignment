@@ -1,12 +1,12 @@
 # backend
 
-### activate virtual environment (must be done for every terminal opened)
+# activate virtual environment (must be done for every terminal opened)
 
-# windows
+### windows
 ```
 api-project/Scripts/activate
 ```
-# mac
+### mac
 ```
 source api-project/bin/activate
 ```
