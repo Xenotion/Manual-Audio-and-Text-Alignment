@@ -1,18 +1,52 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+    {{ test }}
+</div>
+
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+<script>
 
-@Options({
-  components: {
-    HelloWorld,
-  },
-})
-export default class HomeView extends Vue {}
+
+
+
+import BackendService from "../services/backendService"
+
+const backendService = new BackendService();
+
+export default {
+    name: 'HomeView',
+    components:{
+     // add components here
+  
+
+    },
+    data(){
+        return{
+            test: 0,
+        }
+    },
+    computed:{
+        
+    },
+
+    methods:{
+        // updates 'test' with api call
+        getTest(){
+            backendService.getTest()
+                .then(res => this.test = res)
+                .finally(console.log(this.test));
+            },
+        
+    },
+    created(){
+        // run after the page is created (?)
+        this.getTest();
+    },
+ 
+}
 </script>
+
+<style>
+  
+</style>
