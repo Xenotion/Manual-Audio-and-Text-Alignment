@@ -1,6 +1,8 @@
 <template>
   <div class="home">
     {{ test }}
+    <br>
+    <input type="file" @change="filesChange($event.target.files)"/>
 </div>
 
 </template>
@@ -13,7 +15,7 @@
 import BackendService from "../services/backendService"
 
 const backendService = new BackendService();
-
+// we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
 export default {
     name: 'HomeView',
     components:{
@@ -36,12 +38,16 @@ export default {
             backendService.getTest()
                 .then(res => this.test = res)
                 .finally(console.log(this.test));
-            },
+        },
+        // handles when user chooses a new file
+        filesChange(files){
+            console.log(files);
+        }
         
     },
     created(){
         // run after the page is created (?)
-        this.getTest();
+        //this.getTest();
     },
  
 }
