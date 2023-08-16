@@ -47,9 +47,11 @@ export default {
         async onFileChanged(files){
             
             var file = files[0];
+
             console.log(file);
             var result = await backendService.uploadAudioFile(file)
             this.getAudioFiles(); // updates the list
+
 
         }
 
