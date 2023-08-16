@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 class FileUploadView(APIView):
     parser_classes = (MultiPartParser, FormParser)
-    @csrf_exempt
+
     def post(self, request):
         file_serializer = AudioFileSerializer(data=request.data)
         if file_serializer.is_valid():
