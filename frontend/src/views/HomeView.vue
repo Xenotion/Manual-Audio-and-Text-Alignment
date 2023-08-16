@@ -2,15 +2,12 @@
   <div class="home">
     {{ test }}
     <br>
-    <input type="file" @change="filesChange($event.target.files)"/>
+    <input type="file" @change="onFileChanged($event.target.files)"/>
 </div>
 
 </template>
 
 <script>
-
-
-
 
 import BackendService from "../services/backendService"
 
@@ -40,8 +37,11 @@ export default {
                 .finally(console.log(this.test));
         },
         // handles when user chooses a new file
-        filesChange(files){
-            console.log(files);
+        onFileChanged(files){
+            
+            var file = files[0];
+            console.log(file);
+            backendService.uploadAudioFile(file);
         }
         
     },
