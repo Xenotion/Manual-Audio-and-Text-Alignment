@@ -11,5 +11,12 @@ export default class backendService{
         console.log(result.data);
         return result.data;
     }
+
+    public async uploadAudioFile(file: File){
+        //console.log(file + " added.")
+        const result = await axios.post(`${API_URL}/upload`, file);
+        console.log(file + " added.")
+        return result.data
+    }
     
 }
