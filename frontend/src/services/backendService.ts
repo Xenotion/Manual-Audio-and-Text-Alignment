@@ -13,23 +13,28 @@ export default class backendService{
 
     }
 
-
-    
-
-    public async uploadAudioFile(file: File){
-        //console.log(file + " added.")
+    public async uploadAudioFile(file: File) {
         const formData = new FormData();
         formData.append('file', file);
-
-        console.log(API_URL);
-        const result = await axios.post(`${API_URL}/audiofile/upload/`, 
-            file,
-            {headers: {
-                'Content-Type': 'multipart/form-data'},
-            },
-          );
-        console.log(file + " added.")
-        return result.data
-    }
     
+        try {
+            const result = await axios.post(
+                `${API_URL}/audiofile/upload/`, 
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+            return result.data;
+        } catch (error: any) { // Add type any to error for now
+            if (error && error.response && typeof error.response === 'object' && error.response.data) {
+                console.error('Error uploading file:', error.response.data);
+            } else {
+                console.error('Unknown error uploading file:', error);
+            }
+            throw error;
+        }
+    }    
 }
