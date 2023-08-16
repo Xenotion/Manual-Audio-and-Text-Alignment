@@ -13,6 +13,14 @@ export default class backendService{
 
     }
 
+    public async getAudioFiles(){
+
+        const result = await axios.get(`${API_URL}/audiofile/audiofiles/`);
+        console.log(result.data);
+        return result.data;
+
+    }
+
 
     
 
