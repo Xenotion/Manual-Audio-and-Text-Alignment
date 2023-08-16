@@ -40,7 +40,6 @@ export default {
         onFileChanged(files){
             
             var file = files[0];
-            console.log(file);
             backendService.uploadAudioFile(file);
         }
         

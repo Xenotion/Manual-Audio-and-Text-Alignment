@@ -17,18 +17,15 @@ export default class backendService{
     
 
     public async uploadAudioFile(file: File){
-        //console.log(file + " added.")
         const formData = new FormData();
         formData.append('file', file);
 
-        console.log(API_URL);
         const result = await axios.post(`${API_URL}/audiofile/upload/`, 
             formData,
             {headers: {
                 'Content-Type': 'multipart/form-data'},
             },
           );
-        console.log(file + " added.")
         return result.data
     }
     
