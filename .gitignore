@@ -1,4 +1,5 @@
 
+
 #https://stackoverflow.com/questions/3719243/best-practices-for-adding-gitignore-file-for-python-projects
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -52,4 +53,10 @@ coverage.xml
 docs/_build/
 
 
+# apple
 .DS_Store
+
+# db related stuff:
+backend/db.sqlite3
+backend/audio_files
+
