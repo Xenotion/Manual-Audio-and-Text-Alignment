@@ -15,6 +15,7 @@ class FileUploadView(APIView):
     @csrf_exempt
     def post(self, request):
         print(request)
+        print(request.POST)
         file_serializer = AudioFileSerializer(data=request.data)
         print(file_serializer)
         if file_serializer.is_valid():

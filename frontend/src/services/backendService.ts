@@ -23,7 +23,7 @@ export default class backendService{
 
         console.log(API_URL);
         const result = await axios.post(`${API_URL}/audiofile/upload/`, 
-            file,
+            formData,
             {headers: {
                 'Content-Type': 'multipart/form-data'},
             },
