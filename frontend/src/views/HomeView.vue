@@ -73,7 +73,7 @@ export default {
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
