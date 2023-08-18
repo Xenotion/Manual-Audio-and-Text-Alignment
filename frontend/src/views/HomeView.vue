@@ -1,15 +1,16 @@
 <template>
     <div class="home">
         <div class="file-upload">
-            <input type="file" @change="onFileChanged($event.target.files)"/>
+            <input type="file" @change="onFileChanged($event.target.files) " accept="audio/mp3,audio/*;capture=microphone"/>
         </div>
+        <AudioWave v-if="audioFile"  :audioFile="audioFile" />
         <ul class="audio-list">
             <li v-for="(audio, index) in audioFiles" :key="index">
                 <AudioFileListItem :audio="audio" />
             </li>
         </ul>
 
-         <AudioWave v-if="audioFile"  :audioFile="audioFile"/>
+         
     </div>
 
 </template>
