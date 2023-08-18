@@ -1,12 +1,15 @@
 <template>
     <div class="home">
-        <li v-for="(audio, index) in audioFiles" :key="index">
-            <AudioFileListItem :audio="audio" />
-        </li>
-        <br>
-        <input type="file" @change="onFileChanged($event.target.files)"/>
-        <AudioWave v-if="audioFile"  :audioFile="audioFile"/>
-    
+        <div class="file-upload">
+            <input type="file" @change="onFileChanged($event.target.files)"/>
+        </div>
+        <ul class="audio-list">
+            <li v-for="(audio, index) in audioFiles" :key="index">
+                <AudioFileListItem :audio="audio" />
+            </li>
+        </ul>
+
+         <AudioWave v-if="audioFile"  :audioFile="audioFile"/>
     </div>
 
 </template>
@@ -70,6 +73,24 @@ export default {
 }
 </script>
 
-<style>
-  
+<style lang="scss">
+.home {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.file-upload {
+    padding: 15px 100px; 
+    margin-bottom: 200px;
+}
+
+.audio-list {
+    list-style: none;
+    padding: 0;
+}
+
 </style>
