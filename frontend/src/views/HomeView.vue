@@ -8,6 +8,8 @@
                 <AudioFileListItem :audio="audio" />
             </li>
         </ul>
+
+         <AudioWave v-if="audioFile"  :audioFile="audioFile"/>
     </div>
 
 </template>
@@ -16,18 +18,21 @@
 
 import BackendService from "../services/backendService.ts"
 import AudioFileListItem from "../components/AudioFileListItem.vue"
+import AudioWave from "../components/AudioWave.vue"
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
 export default {
     name: 'HomeView',
     components:{
      // add components here
-        AudioFileListItem
+        AudioFileListItem,
+        AudioWave
 
     },
     data(){
         return{
             audioFiles: [],
+            audioFile: null,
         }
     },
     computed:{
@@ -51,6 +56,7 @@ export default {
 
             console.log(file);
             var result = await backendService.uploadAudioFile(file)
+            this.audioFile = file;
             this.getAudioFiles(); // updates the list
 
 
