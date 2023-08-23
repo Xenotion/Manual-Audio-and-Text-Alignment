@@ -24,6 +24,7 @@
 /// code adpated from : https://wavesurfer-js.org/examples/?regions.js
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions'; // Make sure the path is correct
+import TimelinePlugin from "wavesurfer.js/plugins/timeline";
 
 export default {
   props:{
@@ -46,6 +47,38 @@ export default {
       // can also take an url
     
     });
+
+    // Initialize the Timeline plugin
+    ws.registerPlugin(TimelinePlugin.create())
+
+    // Play on click
+    ws.on('interaction', () => {
+      ws.play()
+    })
+
+    // Rewind to the beginning on finished playing
+    ws.on('finish', () => {
+      ws.setTime(0)
+    })
+
+    // Update the zoom level on slider change
+    ws.once('decode', () => {
+      const slider = document.querySelector('input[type="range"]')
+
+      slider.addEventListener('input', (e) => {
+        const minPxPerSec = e.target.valueAsNumber
+        ws.zoom(minPxPerSec)
+      })
+    })
+
+    //
+
+
+
+
+
+
+    // Applying regions
     ws.loadBlob(this.audioFile);
     const wsRegions = ws.registerPlugin(RegionsPlugin.create());
     
@@ -137,4 +170,6 @@ export default {
     },
   },
 };
+
+
 </script>
