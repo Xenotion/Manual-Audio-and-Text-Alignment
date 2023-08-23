@@ -1,24 +1,26 @@
-
 <template>
   <div>
     <div id="waveform"></div>
-    
+
+    <button>Play/pause</button>
+
     <p>
       <label>
         <input type="checkbox" v-model="loop" />
         Loop regions
       </label>
-      
+
       <label style="margin-left: 2em">
-        Zoom: <input type="range" min="10" max="1000"  v-model="zoomValue" @input="updateZoom" />
+        Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
     </p>
-    
+
     <p>
       📖 <a href="https://wavesurfer-js.org/docs/classes/plugins_regions.RegionsPlugin">Regions plugin docs</a>
     </p>
   </div>
 </template>
+
 
 <script>
 /// code adpated from : https://wavesurfer-js.org/examples/?regions.js
@@ -56,10 +58,30 @@ export default {
       ws.play()
     })
 
-    // Rewind to the beginning on finished playing
-    ws.on('finish', () => {
-      ws.setTime(0)
+    // When the audio starts playing */
+    ws.on('play', () => {
+      console.log('Play')
     })
+
+    // When the audio pauses */
+    ws.on('pause', () => {
+      console.log('Pause')
+    })
+
+    //When the audio finishes playing */
+    ws.on('finish', () => {
+      console.log('Finish')
+    })
+
+    document.querySelector('button').addEventListener('click', () => {
+      ws.playPause()
+    })
+
+
+    // // Rewind to the beginning on finished playing
+    // ws.on('finish', () => {
+    //   ws.setTime(0)
+    // })
 
     // Update the zoom level on slider change
     ws.once('decode', () => {
@@ -70,13 +92,6 @@ export default {
         ws.zoom(minPxPerSec)
       })
     })
-
-    //
-
-
-
-
-
 
     // Applying regions
     ws.loadBlob(this.audioFile);
