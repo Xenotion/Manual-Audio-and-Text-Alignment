@@ -4,6 +4,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+audiofile/migrations/__pycache__
 
 # C extensions
 *.so
