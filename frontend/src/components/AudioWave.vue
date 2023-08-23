@@ -79,9 +79,9 @@ export default {
 
 
     // // Rewind to the beginning on finished playing
-    // ws.on('finish', () => {
-    //   ws.setTime(0)
-    // })
+    ws.on('finish', () => {
+      ws.setTime(0)
+    })
 
     // Update the zoom level on slider change
     ws.once('decode', () => {
@@ -141,36 +141,41 @@ export default {
     wsRegions.on('region-updated', (region) => {
       console.log('Updated region', region);
     });
-    
-    wsRegions.on('region-in', (region) => {
-      this.activeRegion = region;
-    });
-    
-    wsRegions.on('region-out', (region) => {
-      if (this.activeRegion === region) {
-        if (this.loop) {
-          region.play();
-        } else {
-          this.activeRegion = null;
+
+    // Loop a region on click
+    let loop = true
+    // Toggle looping with a checkbox
+    document.querySelector('input[type="checkbox"]').onclick = (e) => {
+      loop = e.target.checked
+    }
+
+    {
+      let activeRegion = null
+      wsRegions.on('region-in', (region) => {
+        activeRegion = region
+      })
+      wsRegions.on('region-out', (region) => {
+        if (activeRegion === region) {
+          if (loop) {
+            region.play()
+          } else {
+            activeRegion = null
+          }
         }
-      }
-    });
-    
-    wsRegions.on('region-clicked', (region, e) => {
-      e.stopPropagation();
-      this.activeRegion = region;
-      region.play();
-      region.setOptions({ color: this.randomColor() });
-    });
-    
-    ws.on('interaction', () => {
-      this.activeRegion = null;
-    });
-    
-    ws.once('decode', () => {
-      this.updateZoom();
-    });
+      })
+      wsRegions.on('region-clicked', (region, e) => {
+        e.stopPropagation() // prevent triggering a click on the waveform
+        activeRegion = region
+        region.play()
+        //region.setOptions({ color: randomColor() })
+      })
+      // Reset the active region when the user clicks anywhere in the waveform
+      ws.on('interaction', () => {
+        activeRegion = null
+      })
+    }
   },
+
   methods: {
     random(min, max) {
       return Math.random() * (max - min) + min;
