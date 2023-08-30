@@ -4,7 +4,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-audiofile/migrations/__pycache__
 
 # C extensions
 *.so
@@ -60,4 +59,5 @@ docs/_build/
 # db related stuff:
 backend/db.sqlite3
 backend/audio_files
+backend/audiofile/migrations/__pycache__
 
