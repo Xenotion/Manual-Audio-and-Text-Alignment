@@ -1,6 +1,6 @@
 <template>
     <!--TODO: Make EditingView and InputsView both child components of homepage-->
-    <div class="inputs-container" v-if="!inEditMode">
+    <div class="inputs-container">
         
         Username:
         <input class = "input" v-model="username"/>
@@ -18,19 +18,13 @@
          
     </div>
 
-    <EditingView
-        v-if="inEditMode"
-        :username="username"
-        :audioFile="audioFile"
-        :textFile="textFile"
-        />
 
 </template>
 
 <script>
 
 import BackendService from "../services/backendService.ts"
-import EditingView from "../views/EditingView.vue"
+
 
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
@@ -38,13 +32,13 @@ export default {
     name: 'UserInputsView',
     components:{
      // add components here
-        EditingView
+
 
     },
     data(){
         return{
             // TODO: move this into home page and make this a component
-            inEditMode: false,
+
             username: "",
             textFile: null,
             audioFile: null,
@@ -78,8 +72,10 @@ export default {
 
         toEditingPage(){
             if(this.inputsValid){
+
+                this.$emit('goToEditMode', { username: this.username, audioFile: this.audioFile, textFile: this.textFile })
                 console.log("valid!");
-                this.inEditMode = true;
+       
                 // can't pass as params now:
                 //https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
                 //this.$router.push({ name: 'editing-view'})
