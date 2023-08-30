@@ -1,17 +1,21 @@
 <template>
-    <div class="home">
-        <div class="file-upload">
-            <input type="file" @change="onFileChanged($event.target.files) " accept="audio/mp3,audio/*;capture=microphone"/>
+    <div class="home" v-if="isTest">
+        <div>
+            <AudioWave v-if="audioFile"  :audioFile="audioFile" />
+            <ul class="audio-list">
+                <li v-for="(audio, index) in audioFiles" :key="index">
+                    <AudioFileListItem :audio="audio" />
+                </li>
+            </ul>
         </div>
-        <AudioWave v-if="audioFile"  :audioFile="audioFile" />
-        <ul class="audio-list">
-            <li v-for="(audio, index) in audioFiles" :key="index">
-                <AudioFileListItem :audio="audio" />
-            </li>
-        </ul>
-
-         
     </div>
+    <UserInputsView v-if="!inEditMode" @goToEditMode="onEditMode"/>
+    <EditingView
+        v-if="inEditMode"
+        :username="username"
+        :audioFile="audioFile"
+        :textFile="textFile"
+        />
 
 </template>
 
@@ -20,6 +24,8 @@
 import BackendService from "../services/backendService.ts"
 import AudioFileListItem from "../components/AudioFileListItem.vue"
 import AudioWave from "../components/AudioWave.vue"
+import UserInputsView from "../views/UserInputsView.vue"
+import EditingView from "../views/EditingView.vue"
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
 export default {
@@ -27,13 +33,22 @@ export default {
     components:{
      // add components here
         AudioFileListItem,
-        AudioWave
+        AudioWave,
+        UserInputsView,
+        EditingView,
+
 
     },
     data(){
         return{
             audioFiles: [],
+            // get from user inputs
+            username: "",
+            textFile: null,
             audioFile: null,
+
+            isTest: false, // toggles the testing components
+            inEditMode: false, // toggles editing view
         }
     },
     computed:{
@@ -41,8 +56,7 @@ export default {
     },
 
     methods:{
-     
-
+    
         // get audio files from backend
         getAudioFiles(){
             backendService.getAudioFiles()
@@ -61,6 +75,13 @@ export default {
             this.getAudioFiles(); // updates the list
 
 
+        },
+
+        onEditMode(userInputs){
+            this.username=userInputs['username'];
+            this.audioFile=userInputs['audioFile'];
+            this.textFile=userInputs['textFile'];
+            this.inEditMode = true;
         }
 
 
@@ -68,7 +89,7 @@ export default {
     },
     created(){
         // run after the page is created (?)
-        this.getAudioFiles();
+        //this.getAudioFiles();
     },
  
 }

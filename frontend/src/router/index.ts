@@ -4,30 +4,13 @@ import UserIputs from '../views/UserInputsView.vue'
 import EditingView from '../views/EditingView.vue'
 
 const routes: Array<RouteRecordRaw> = [
-  // to be replaced?
+
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: HomeView
   },
-  {
-    //default first page
-  
-    path: '/',
-    name: 'user-inputs',
-    component: UserIputs
-  },
-  {
-    //default first page
-  
-    path: '/editing-view',
-    name: 'editing-view',
-    component: EditingView,
-    props: true
-  },
-  
 
-  
   {
     path: '/about',
     name: 'about',
