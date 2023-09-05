@@ -14,6 +14,7 @@
 </template>
 
 <style lang="scss">
+
 #app {
   display: flex;
   flex-direction: column;
@@ -52,7 +53,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 400px;
+  padding: 15px 5%;
 }
 
 .logo img {

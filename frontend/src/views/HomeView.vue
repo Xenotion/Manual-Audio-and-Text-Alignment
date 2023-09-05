@@ -52,11 +52,11 @@ export default {
         }
     },
     computed:{
-        
+
     },
 
     methods:{
-    
+
         // get audio files from backend
         getAudioFiles(){
             backendService.getAudioFiles()
@@ -66,7 +66,7 @@ export default {
 
         // handles when user chooses a new file
         async onFileChanged(files){
-            
+
             var file = files[0];
 
             console.log(file);
@@ -85,13 +85,13 @@ export default {
         }
 
 
-        
+
     },
     created(){
         // run after the page is created (?)
         //this.getAudioFiles();
     },
- 
+
 }
 </script>
 
@@ -106,7 +106,7 @@ export default {
 }
 
 .file-upload {
-    padding: 15px 100px; 
+    padding: 15px 100px;
     margin-bottom: 200px;
 }
 

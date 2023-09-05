@@ -47,7 +47,7 @@ export default {
       waveColor: 'rgb(200, 0, 200)',
       progressColor: 'rgb(100, 0, 100)',
       // can also take an url
-    
+
     });
 
     // Initialize the Timeline plugin
@@ -96,7 +96,7 @@ export default {
     // Applying regions
     ws.loadBlob(this.audioFile);
     const wsRegions = ws.registerPlugin(RegionsPlugin.create());
-    
+
     ws.on('decode', () => {
       wsRegions.addRegion({
         start: 0,
@@ -121,7 +121,7 @@ export default {
         color: this.randomColor(),
         resize: false,
       });
-      
+
       wsRegions.addRegion({
         start: 19,
         content: 'Marker',
@@ -133,11 +133,11 @@ export default {
         color: this.randomColor(),
       });
     });
-    
+
     wsRegions.enableDragSelection({
       color: 'rgba(255, 0, 0, 0.1)',
     });
-    
+
     wsRegions.on('region-updated', (region) => {
       console.log('Updated region', region);
     });
