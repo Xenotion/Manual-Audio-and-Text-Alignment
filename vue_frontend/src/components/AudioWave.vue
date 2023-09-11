@@ -2,7 +2,11 @@
   <div>
     <div id="waveform"></div>
 
-    <button>Play/pause</button>
+    <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+
+    <input type="text" v-model="newRegionName" placeholder="Enter Segment Name" />
+
+    <button @click="addRegion">Add New Segment</button>
 
     <p>
       <label>
@@ -21,9 +25,7 @@
   </div>
 </template>
 
-
 <script>
-/// code adpated from : https://wavesurfer-js.org/examples/?regions.js
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions'; // Make sure the path is correct
 import TimelinePlugin from "wavesurfer.js/plugins/timeline";
@@ -38,49 +40,90 @@ export default {
       loop: true,
       zoomValue: 10,
       activeRegion: null,
+      isPlaying: false,
+      newRegionName: '',
+      // TODO Loop through this array of region to get times?
+      regions: [], // Store regions here
     };
   },
-  mounted() {
 
+  methods: {
+    togglePlayPause() {
+      if (this.isPlaying) {
+        this.$data.ws.pause();
+      } else {
+        this.$data.ws.play();
+      }
+      this.isPlaying = !this.isPlaying;
+    },
+
+    addRegion() {
+      const wsRegions = this.$data.wsRegions;
+      // Starts new regions where user is paused
+      const currentTime = this.$data.ws.getCurrentTime();
+      const start = currentTime
+      const end = start + 10
+      const content = this.newRegionName;
+      const color = this.randomColor();
+
+      const newRegion = wsRegions.addRegion({
+        start,
+        end,
+        content,
+        color,
+        resize: true,
+      });
+
+      this.regions.push(newRegion); // Adds new region to array
+      // Clear the new region name
+      this.newRegionName = '';
+    },
+
+    random(min, max) {
+      return Math.random() * (max - min) + min;
+    },
+
+    randomColor() {
+      return `rgba(${this.random(0, 255)}, ${this.random(0, 255)}, ${this.random(0, 255)}, 0.5)`;
+    },
+
+    updateZoom() {
+      const minPxPerSec = Number(this.zoomValue);
+      this.$data.ws.zoom(minPxPerSec);
+    },
+  },
+
+  mounted() {
     const ws = WaveSurfer.create({
       container: '#waveform',
       waveColor: 'rgb(200, 0, 200)',
       progressColor: 'rgb(100, 0, 100)',
-      // can also take an url
-
     });
+
+    this.$data.ws = ws; // Store ws reference
 
     // Initialize the Timeline plugin
     ws.registerPlugin(TimelinePlugin.create())
 
     // Play on click
     ws.on('interaction', () => {
-      ws.play()
+      this.togglePlayPause();
     })
 
-    // When the audio starts playing */
+    // When the audio starts playing
     ws.on('play', () => {
-      console.log('Play')
+      this.isPlaying = true;
     })
 
-    // When the audio pauses */
+    // When the audio pauses
     ws.on('pause', () => {
-      console.log('Pause')
+      this.isPlaying = false;
     })
 
-    //When the audio finishes playing */
+    // When the audio finishes playing
     ws.on('finish', () => {
-      console.log('Finish')
-    })
-
-    document.querySelector('button').addEventListener('click', () => {
-      ws.playPause()
-    })
-
-
-    // // Rewind to the beginning on finished playing
-    ws.on('finish', () => {
-      ws.setTime(0)
+      this.isPlaying = false;
+      ws.seekTo(0); // Rewind to the beginning on finished playing
     })
 
     // Update the zoom level on slider change
@@ -97,42 +140,7 @@ export default {
     ws.loadBlob(this.audioFile);
     const wsRegions = ws.registerPlugin(RegionsPlugin.create());
 
-    ws.on('decode', () => {
-      wsRegions.addRegion({
-        start: 0,
-        end: 8,
-        content: 'Resize me',
-        color: this.randomColor(),
-        drag: false,
-        resize: true,
-      });
-      wsRegions.addRegion({
-        start: 9,
-        end: 10,
-        content: 'Cramped region',
-        color: this.randomColor(),
-        minLength: 1,
-        maxLength: 10,
-      });
-      wsRegions.addRegion({
-        start: 12,
-        end: 17,
-        content: 'Drag me',
-        color: this.randomColor(),
-        resize: false,
-      });
-
-      wsRegions.addRegion({
-        start: 19,
-        content: 'Marker',
-        color: this.randomColor(),
-      });
-      wsRegions.addRegion({
-        start: 20,
-        content: 'Second marker',
-        color: this.randomColor(),
-      });
-    });
+    this.$data.wsRegions = wsRegions; // Store wsRegions reference
 
     wsRegions.enableDragSelection({
       color: 'rgba(255, 0, 0, 0.1)',
@@ -167,7 +175,6 @@ export default {
         e.stopPropagation() // prevent triggering a click on the waveform
         activeRegion = region
         region.play()
-        //region.setOptions({ color: randomColor() })
       })
       // Reset the active region when the user clicks anywhere in the waveform
       ws.on('interaction', () => {
@@ -175,21 +182,5 @@ export default {
       })
     }
   },
-
-  methods: {
-    random(min, max) {
-      return Math.random() * (max - min) + min;
-    },
-    randomColor() {
-      return `rgba(${this.random(0, 255)}, ${this.random(0, 255)}, ${this.random(0, 255)}, 0.5)`;
-    },
-    updateZoom() {
-      const minPxPerSec = Number(this.zoomValue);
-      // TODO: get ws from here
-      //ws.zoom(minPxPerSec);
-    },
-  },
 };
-
-
 </script>

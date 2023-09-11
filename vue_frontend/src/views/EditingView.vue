@@ -80,6 +80,8 @@ export default {
 
 <style lang="scss">
 .editing-view {
+  margin-top: 250px;
+  width: 1100px;
   display: flex;
   justify-content: center;
   align-items: center;
