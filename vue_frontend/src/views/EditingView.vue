@@ -6,10 +6,11 @@
       </div>
       <div>
         <p>Audio File: {{ audioFileName }}</p>
-        <AudioWave :audioFile="audioFile" />
+        <AudioWave :audioFile="audioFile" :maxSegmentNumber="segmentCount"/>
       </div>
       <div class="text-container">
         <p>Text File: {{ textFileName }}</p>
+        <p>Number of Segments: {{ segmentCount }}</p>
         <div class="text-content">
           <div class="scrollable-text-wrapper">
             <div class="scrollable-text">
@@ -49,16 +50,19 @@ export default {
       formattedTextFile: null,
       textFileName: "",
       audioFileName: "",
+      segmentCount: 0,
     };
   },
   created() {
     console.log("Editing view created!");
     this.formatTextFile();
+      
 
     // Display audio and text name
     this.audioFileName = this.audioFile.name;
     this.textFileName = this.textFile.name;
   },
+
   watch: {
     textFile: "formatTextFile",
   },
@@ -68,11 +72,29 @@ export default {
         const reader = new FileReader();
         reader.onload = () => {
           this.formattedTextFile = reader.result;
+          this.getSegmentCount();
         };
         reader.readAsText(this.textFile);
       } else {
         this.formattedTextFile = this.textFile;
       }
+    },
+
+    // count how many segments are labelled in the text file
+    getSegmentCount(){
+      if(!this.formattedTextFile){
+        console.log(this.formattedTextFile)
+        return;
+      }
+      const regex = /\|\d+\|/g;
+      const segments = this.formattedTextFile.match(regex);
+
+      if (segments) {
+        this.segmentCount = segments.length;
+      } else {
+        this.segmentCount = 0;
+      }
+
     },
   },
 };

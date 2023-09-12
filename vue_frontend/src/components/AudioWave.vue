@@ -18,9 +18,22 @@
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
     </p>
-
-    <p>
-      📖 <a href="https://wavesurfer-js.org/docs/classes/plugins_regions.RegionsPlugin">Regions plugin docs</a>
+    <br>
+    <p v-if="activeRegion">
+      <b>Selected segment: {{ !activeRegion.content? 'unnamed region' : activeRegion.content.innerHTML }}</b>
+      <br>
+      Actions:
+      <br>
+      <button @click="deleteActiveRegion">Delete</button>
+      Assign segment number:
+      <input
+        type="number"
+        id="numberInput"
+        v-model.number="selectedSegmentNumber"
+        min="1"
+        :max="maxSegmentNumber"
+      />
+      <button @click="updateSegmentNumber">Confirm</button>
     </p>
   </div>
 </template>
@@ -33,6 +46,7 @@ import TimelinePlugin from "wavesurfer.js/plugins/timeline";
 export default {
   props:{
     audioFile: Blob,
+    maxSegmentNumber: Number,
   },
 
   data() {
@@ -44,6 +58,8 @@ export default {
       newRegionName: '',
       // TODO Loop through this array of region to get times?
       regions: [], // Store regions here
+      
+      selectedSegmentNumber: 0,
     };
   },
 
@@ -77,6 +93,22 @@ export default {
       this.regions.push(newRegion); // Adds new region to array
       // Clear the new region name
       this.newRegionName = '';
+    },
+
+    deleteActiveRegion(){
+      if(!this.activeRegion){
+        return;
+      }
+      this.$data.wsRegions.regions.pop(this.activeRegion);
+      
+      this.regions.pop(this.activeRegion);
+      this.activeRegion.remove();
+      this.activeRegion = null;
+      
+    },
+
+    updateSegmentNumber(){
+      console.log(this.selectedSegmentNumber);
     },
 
     random(min, max) {
@@ -158,27 +190,29 @@ export default {
     }
 
     {
-      let activeRegion = null
+   
       wsRegions.on('region-in', (region) => {
-        activeRegion = region
+        this.activeRegion = region
       })
       wsRegions.on('region-out', (region) => {
-        if (activeRegion === region) {
+        if (this.activeRegion === region) {
           if (loop) {
             region.play()
           } else {
-            activeRegion = null
+            this.activeRegion = null
           }
         }
       })
       wsRegions.on('region-clicked', (region, e) => {
         e.stopPropagation() // prevent triggering a click on the waveform
-        activeRegion = region
+        this.activeRegion = region
+        console.log(wsRegions);
+        region.setOptions({ color: this.randomColor() })
         region.play()
       })
       // Reset the active region when the user clicks anywhere in the waveform
       ws.on('interaction', () => {
-        activeRegion = null
+        this.activeRegion = null
       })
     }
   },
