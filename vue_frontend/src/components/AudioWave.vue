@@ -22,10 +22,12 @@
     <p v-if="activeRegion">
       <b>Selected segment: {{ !activeRegion.content? 'unnamed region' : activeRegion.content.innerHTML }}</b>
       <br>
+      <b v-if="segmentNumbers.has(activeRegion.id)">Assigned to : |{{ segmentNumbers.get(activeRegion.id)}}|</b>
+      <br>
       Actions:
       <br>
       <button @click="deleteActiveRegion">Delete</button>
-      Assign segment number:
+      Assign/reassign segment number:
       <input
         type="number"
         id="numberInput"
