@@ -4,7 +4,7 @@
 
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="newRegionName" placeholder="Enter Segment Name" />
+    <input type="text" v-model="newRegionName" placeholder="Enter Segment Label" />
 
     <button @click="addRegion">Add New Segment</button>
 
@@ -60,6 +60,7 @@ export default {
       regions: [], // Store regions here
       
       selectedSegmentNumber: 0,
+      segmentNumbers: new Map(), // maps segments to numbers
     };
   },
 
@@ -103,12 +104,19 @@ export default {
       
       this.regions.pop(this.activeRegion);
       this.activeRegion.remove();
+      this.segmentNumbers.delete(this.activeRegion.id);
       this.activeRegion = null;
       
     },
 
     updateSegmentNumber(){
       console.log(this.selectedSegmentNumber);
+      // TODO: check if segment number taken at the end
+      this.segmentNumbers.set(this.activeRegion.id, this.selectedSegmentNumber);
+      // TODO: reflect this in the label
+      //this.activeRegion.content.innerHTML += "#" + this.selectedSegmentNumber;
+    
+   
     },
 
     random(min, max) {
@@ -209,6 +217,15 @@ export default {
         console.log(wsRegions);
         region.setOptions({ color: this.randomColor() })
         region.play()
+
+        // TODO: we can make a toggle here?
+        this.$data.ws.pause();
+
+        if(this.segmentNumbers.has(region.id)){
+          this.selectedSegmentNumber = this.segmentNumbers.get(region.id);
+        }else{
+          this.selectedSegmentNumber += 1;
+        }
       })
       // Reset the active region when the user clicks anywhere in the waveform
       ws.on('interaction', () => {
