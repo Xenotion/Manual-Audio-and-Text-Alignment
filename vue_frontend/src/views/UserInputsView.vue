@@ -1,24 +1,19 @@
 <template>
-    <!--TODO: Make EditingView and InputsView both child components of homepage-->
-    <div class="inputs-container">
-        
-        Username:
-        <input class = "input" v-model="username"/>
-   
-        Audio File Upload:
-        <input class = "input" type="file" @change="onAudioFileChanged($event.target.files) " accept="audio/mp3,audio/*;capture=microphone"/>
-      
-        Text File Upload:
-        <input class = "input" type="file" @change="onTextFileChanged($event.target.files) " accept="text/*"/>
-       
-        <button @click="toEditingPage">
-            Next
-        </button>
-
-         
+  <div class="inputs-container">
+    <div class="input-wrapper">
+      <label for="username">Username:</label>
+      <input class="input" id="username" v-model="username" placeholder="Enter your username" />
     </div>
-
-
+    <div class="input-wrapper">
+      <label for="audio-upload">Audio File Upload:</label>
+      <input class="input" type="file" id="audio-upload" @change="onAudioFileChanged($event.target.files)" accept="audio/mp3,audio/*;capture=microphone" />
+    </div>
+    <div class="input-wrapper">
+      <label for="text-upload">Text File Upload:</label>
+      <input class="input" type="file" id="text-upload" @change="onTextFileChanged($event.target.files)" accept="text/*" />
+    </div>
+    <button class="next-button" @click="toEditingPage">Next</button>
+  </div>
 </template>
 
 <script>
@@ -96,19 +91,48 @@ export default {
 </script>
 
 <style lang="scss">
-//TODO: make visuals fancier
-.input{
-    height: 30px;
-    width: 300px;
-    margin-bottom: 50px;
-}
-.inputs-container{
-    display: flex;
-    padding: 50px;
-    flex-direction: column;
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+.input-wrapper {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input {
+  height: 20px;
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.next-button {
+  background-color: #6797ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.next-button:hover {
+  background-color: #577edc;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 </style>

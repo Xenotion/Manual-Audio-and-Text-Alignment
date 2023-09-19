@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <div id="waveform"></div>
-
+  <div id="waveform"></div>
+  <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
     <input type="text" v-model="newRegionName" placeholder="Enter Segment Label" />
@@ -18,15 +17,17 @@
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
     </p>
-    <br>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class ="selected-region">
     <p v-if="activeRegion">
       <b>Selected segment: {{ !activeRegion.content? 'unnamed region' : activeRegion.content.innerHTML }}</b>
-      <br>
       <b v-if="segmentNumbers.has(activeRegion.id)">Assigned to : |{{ segmentNumbers.get(activeRegion.id)}}|</b>
-      <br>
-      Actions:
-      <br>
       <button @click="deleteActiveRegion">Delete</button>
+      <br>
+      <br>
       Assign/reassign segment number:
       <input
         type="number"
@@ -34,9 +35,10 @@
         v-model.number="selectedSegmentNumber"
         min="1"
         :max="maxSegmentNumber"
-      />
+        />
       <button @click="updateSegmentNumber">Confirm</button>
     </p>
+    <div v-if="activeRegion" class="divider"></div>
   </div>
 </template>
 
@@ -237,3 +239,78 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+
+#waveform {
+  margin-bottom: 20px;
+}
+
+.divider {
+  border-top: 2px solid #ccc;
+  margin: 20px 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  // border: 1px solid #ccc;
+  // border-radius: 4px;
+  padding: 0px 10px;
+}
+
+.button-container button {
+  margin-right: 10px;
+  font-size: 14px;
+  padding: 5px 5px;
+  background-color: #6797ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button-container button:hover {
+  background-color: #577edc;
+}
+
+.button-container input {
+  margin-right: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.selected-region {
+  padding-left: 10px;
+  margin-bottom: 30px;
+}
+
+.selected-region input {
+  padding: 4px;
+  margin-left: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.selected-region button {
+  font-size: 14px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 20px;
+}
+
+.selected-region button:hover {
+  background-color: #c0392b;
+}
+
+</style>
