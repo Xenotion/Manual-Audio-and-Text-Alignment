@@ -17,6 +17,10 @@
       <label style="margin-left: 2em">
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
+      <label style="margin-left: 2em">
+        Volume:
+        <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
+      </label>
     </p>
     <br>
     <p v-if="activeRegion">
@@ -55,6 +59,7 @@ export default {
     return {
       loop: true,
       zoomValue: 10,
+      volume:0.5,
       activeRegion: null,
       isPlaying: false,
       newRegionName: '',
@@ -74,6 +79,9 @@ export default {
         this.$data.ws.play();
       }
       this.isPlaying = !this.isPlaying;
+    },
+    updateVolume() {
+      this.$data.ws.setVolume(this.volume);
     },
 
     addRegion() {
