@@ -1,24 +1,49 @@
 <template>
   <div class="editing-view">
-    <div class="inputs-container">
-      <div>
-        <p>Username: {{ username }}</p>
-      </div>
-      <div>
-        <p>Audio File: {{ audioFileName }}</p>
-        <AudioWave :audioFile="audioFile" :maxSegmentNumber="segmentCount"/>
-      </div>
-      <div class="text-container">
-        <p>Text File: {{ textFileName }}</p>
-        <p>Number of Segments: {{ segmentCount }}</p>
-        <div class="text-content">
-          <div class="scrollable-text-wrapper">
-            <div class="scrollable-text">
-              <pre>{{ formattedTextFile }}</pre>
+    <div class="main-container">
+      <div class="edit-inputs-container">
+          <h2>
+            Edit
+          </h2>
+        <div>
+          <p>Username: {{ username }}</p>
+        </div>
+        <div>
+          <p>Audio File: {{ audioFileName }}</p>
+          <AudioWave 
+            :audioFile="audioFile" 
+            :maxSegmentNumber="segmentCount"
+            @regionsChanged="onRegionsChanged"
+          />
+        </div>
+
+        
+        <div class="text-container">
+          <p>Text File: {{ textFileName }}</p>
+          <p>Number of Segments: {{ segmentCount }}</p>
+          <div class="text-content">
+            <div class="scrollable-text-wrapper">
+              <div class="scrollable-text">
+                <pre>{{ formattedTextFile }}</pre>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
+      <div class="sidebar">
+          <h3>
+            Created Segments
+          </h3>
+          <div class="segment-item"
+            v-for="segment in createdSegments" :key="segment.id">
+            <b>|{{ segment.label }}|</b> : {{ segment.name }} <br>
+            {{ segment.startTime }} - {{ segment.endTime }}
+          </div>
+
+          <button @click="exportRegionsToTextFile">Download Segments</button>
+     
+        </div>
     </div>
   </div>
 </template>
@@ -51,6 +76,7 @@ export default {
       textFileName: "",
       audioFileName: "",
       segmentCount: 0,
+      createdSegments: [],
     };
   },
   created() {
@@ -96,6 +122,32 @@ export default {
       }
 
     },
+
+    exportRegionsToTextFile() {
+      if (this.createdSegments === 0) {
+        console.warn('No regions to export.');
+        return;
+      }
+
+      const content = this.createdSegments.map(region => {
+        // todo Fix what the file shows
+        return `{ "label": ${region.label}, "Start time": ${region.startTime}, "End time": ${region.endTime} }`;
+      }).join('\n');
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'segmentedAudio.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+
+    // handle when audiowave component emit a regions changed event
+    onRegionsChanged(regions){
+      this.createdSegments = regions;
+    }
   },
 };
 </script>
@@ -106,16 +158,27 @@ export default {
   margin-top: 50px;
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   padding: 50px;
-  
 }
 
-.inputs-container {
+.main-container {
+  display: flex;
+  padding: 50px;
   width: 100%;
-  max-width: 800px;
-  margin-top: 20px;
+  //height: 700px;
+  max-width: 1200px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc; 
+
+}
+
+.edit-inputs-container {
+  flex: 1; 
+  margin-right: 20px; 
 }
 
 .text-content {
@@ -130,5 +193,23 @@ export default {
 .scrollable-text {
   overflow-y: scroll;
   padding: 10px;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  
+  border-left: 1px solid #000000; /* Add a vertical line */
+  padding-left: 20px; /* Add some padding to separate the content from the line */
+}
+
+.segment-item {
+  width:100%;
+  padding: 10px;
+  margin:10px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc; 
 }
 </style>
