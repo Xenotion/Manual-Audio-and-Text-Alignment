@@ -7,7 +7,6 @@
     <input type="text" v-model="newRegionName" placeholder="Enter Segment Label" />
 
     <button @click="addRegion">Add New Segment</button>
-
     <p>
       <label>
         <input type="checkbox" v-model="loop" />
@@ -20,6 +19,9 @@
       <label style="margin-left: 2em">
         Volume:
         <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
+      </label>
+      <label style="margin-left: 2em">
+        <button @click="exportRegionsToTextFile">Download Info (Test)</button>
       </label>
     </p>
     <br>
@@ -65,7 +67,7 @@ export default {
       newRegionName: '',
       // TODO Loop through this array of region to get times?
       regions: [], // Store regions here
-      
+
       selectedSegmentNumber: 0,
       segmentNumbers: new Map(), // maps segments to numbers
     };
@@ -80,6 +82,8 @@ export default {
       }
       this.isPlaying = !this.isPlaying;
     },
+
+    // Volume slider
     updateVolume() {
       this.$data.ws.setVolume(this.volume);
     },
@@ -92,7 +96,7 @@ export default {
       const end = start + 10
       const content = this.newRegionName;
       const color = this.randomColor();
-
+      // todo need to add the label/segment number to region info to parse onto textfile
       const newRegion = wsRegions.addRegion({
         start,
         end,
@@ -111,12 +115,12 @@ export default {
         return;
       }
       this.$data.wsRegions.regions.pop(this.activeRegion);
-      
+
       this.regions.pop(this.activeRegion);
       this.activeRegion.remove();
       this.segmentNumbers.delete(this.activeRegion.id);
       this.activeRegion = null;
-      
+
     },
 
     updateSegmentNumber(){
@@ -125,8 +129,6 @@ export default {
       this.segmentNumbers.set(this.activeRegion.id, this.selectedSegmentNumber);
       // TODO: reflect this in the label
       //this.activeRegion.content.innerHTML += "#" + this.selectedSegmentNumber;
-    
-   
     },
 
     random(min, max) {
@@ -141,6 +143,29 @@ export default {
       const minPxPerSec = Number(this.zoomValue);
       this.$data.ws.zoom(minPxPerSec);
     },
+
+    // Read array of regions
+
+    exportRegionsToTextFile() {
+      if (this.regions.length === 0) {
+        console.warn('No regions to export.');
+        return;
+      }
+
+      const content = this.regions.map(region => {
+        // todo Fix what the file shows
+        return `{ "label": ${region.id}, "Start time": ${region.start}, "End time": ${region.end} }`;
+      }).join('\n');
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'segmentedAudio.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   },
 
   mounted() {
@@ -154,11 +179,6 @@ export default {
 
     // Initialize the Timeline plugin
     ws.registerPlugin(TimelinePlugin.create())
-
-    // Play on click
-    ws.on('interaction', () => {
-      this.togglePlayPause();
-    })
 
     // When the audio starts playing
     ws.on('play', () => {
@@ -208,7 +228,7 @@ export default {
     }
 
     {
-   
+
       wsRegions.on('region-in', (region) => {
         this.activeRegion = region
       })
@@ -221,6 +241,8 @@ export default {
           }
         }
       })
+
+
       wsRegions.on('region-clicked', (region, e) => {
         e.stopPropagation() // prevent triggering a click on the waveform
         this.activeRegion = region
@@ -228,7 +250,8 @@ export default {
         region.setOptions({ color: this.randomColor() })
         region.play()
 
-        // TODO: we can make a toggle here?
+
+      // TODO: we can make a toggle here?
         this.$data.ws.pause();
 
         if(this.segmentNumbers.has(region.id)){
