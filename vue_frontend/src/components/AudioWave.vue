@@ -149,7 +149,7 @@ export default {
 
     // Play on click
     ws.on('interaction', () => {
-      this.togglePlayPause();
+      //this.togglePlayPause();
     })
 
     // When the audio starts playing
@@ -184,9 +184,10 @@ export default {
 
     this.$data.wsRegions = wsRegions; // Store wsRegions reference
 
-    wsRegions.enableDragSelection({
-      color: 'rgba(255, 0, 0, 0.1)',
-    });
+    // create region on drag
+    // wsRegions.enableDragSelection({
+    //   color: 'rgba(255, 0, 0, 0.1)',
+    // });
 
     wsRegions.on('region-updated', (region) => {
       console.log('Updated region', region);
@@ -205,7 +206,8 @@ export default {
         this.activeRegion = region
       })
       wsRegions.on('region-out', (region) => {
-        if (this.activeRegion === region) {
+       
+        if (this.activeRegion && this.activeRegion.id == region.id) {
           if (loop) {
             region.play()
           } else {
