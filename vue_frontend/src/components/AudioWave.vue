@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <div id="waveform"></div>
-
+  <div id="waveform"></div>
+  <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
     <input type="text" v-model="newRegionName" placeholder="Enter Segment Label" />
 
     <button @click="addRegion">Add New Segment</button>
-
     <p>
       <label>
         <input type="checkbox" v-model="loop" />
@@ -17,16 +15,25 @@
       <label style="margin-left: 2em">
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
+      <label style="margin-left: 2em">
+        Volume:
+        <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
+      </label>
+      <label style="margin-left: 2em">
+        <button @click="exportRegionsToTextFile">Download Info (Test)</button>
+      </label>
     </p>
-    <br>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class ="selected-region">
     <p v-if="activeRegion">
       <b>Selected segment: {{ !activeRegion.content? 'unnamed region' : activeRegion.content.innerHTML }}</b>
-      <br>
       <b v-if="segmentNumbers.has(activeRegion.id)">Assigned to : |{{ segmentNumbers.get(activeRegion.id)}}|</b>
-      <br>
-      Actions:
-      <br>
       <button @click="deleteActiveRegion">Delete</button>
+      <br>
+      <br>
       Assign/reassign segment number:
       <input
         type="number"
@@ -34,9 +41,10 @@
         v-model.number="selectedSegmentNumber"
         min="1"
         :max="maxSegmentNumber"
-      />
+        />
       <button @click="updateSegmentNumber">Confirm</button>
     </p>
+    <div v-if="activeRegion" class="divider"></div>
   </div>
 </template>
 
@@ -55,12 +63,13 @@ export default {
     return {
       loop: true,
       zoomValue: 10,
+      volume:0.5,
       activeRegion: null,
       isPlaying: false,
       newRegionName: '',
       // TODO Loop through this array of region to get times?
       regions: [], // Store regions here
-      
+
       selectedSegmentNumber: 0,
       segmentNumbers: new Map(), // maps segments to numbers
     };
@@ -76,6 +85,11 @@ export default {
       this.isPlaying = !this.isPlaying;
     },
 
+    // Volume slider
+    updateVolume() {
+      this.$data.ws.setVolume(this.volume);
+    },
+
     addRegion() {
       const wsRegions = this.$data.wsRegions;
       // Starts new regions where user is paused
@@ -84,7 +98,7 @@ export default {
       const end = start + 10
       const content = this.newRegionName;
       const color = this.randomColor();
-
+      // todo need to add the label/segment number to region info to parse onto textfile
       const newRegion = wsRegions.addRegion({
         start,
         end,
@@ -103,12 +117,12 @@ export default {
         return;
       }
       this.$data.wsRegions.regions.pop(this.activeRegion);
-      
+
       this.regions.pop(this.activeRegion);
       this.activeRegion.remove();
       this.segmentNumbers.delete(this.activeRegion.id);
       this.activeRegion = null;
-      
+
     },
 
     updateSegmentNumber(){
@@ -117,8 +131,6 @@ export default {
       this.segmentNumbers.set(this.activeRegion.id, this.selectedSegmentNumber);
       // TODO: reflect this in the label
       //this.activeRegion.content.innerHTML += "#" + this.selectedSegmentNumber;
-    
-   
     },
 
     random(min, max) {
@@ -133,6 +145,29 @@ export default {
       const minPxPerSec = Number(this.zoomValue);
       this.$data.ws.zoom(minPxPerSec);
     },
+
+    // Read array of regions
+
+    exportRegionsToTextFile() {
+      if (this.regions.length === 0) {
+        console.warn('No regions to export.');
+        return;
+      }
+
+      const content = this.regions.map(region => {
+        // todo Fix what the file shows
+        return `{ "label": ${region.id}, "Start time": ${region.start}, "End time": ${region.end} }`;
+      }).join('\n');
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'segmentedAudio.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   },
 
   mounted() {
@@ -149,8 +184,10 @@ export default {
 
     // Play on click
     ws.on('interaction', () => {
+      // disabled for now
       //this.togglePlayPause();
     })
+
 
     // When the audio starts playing
     ws.on('play', () => {
@@ -201,7 +238,7 @@ export default {
     }
 
     {
-   
+
       wsRegions.on('region-in', (region) => {
         this.activeRegion = region
       })
@@ -215,6 +252,8 @@ export default {
           }
         }
       })
+
+
       wsRegions.on('region-clicked', (region, e) => {
         e.stopPropagation() // prevent triggering a click on the waveform
         this.activeRegion = region
@@ -222,7 +261,8 @@ export default {
         region.setOptions({ color: this.randomColor() })
         region.play()
 
-        // TODO: we can make a toggle here?
+
+      // TODO: we can make a toggle here?
         this.$data.ws.pause();
 
         if(this.segmentNumbers.has(region.id)){
@@ -239,3 +279,78 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+
+#waveform {
+  margin-bottom: 20px;
+}
+
+.divider {
+  border-top: 2px solid #ccc;
+  margin: 20px 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  // border: 1px solid #ccc;
+  // border-radius: 4px;
+  padding: 0px 10px;
+}
+
+.button-container button {
+  margin-right: 10px;
+  font-size: 14px;
+  padding: 5px 5px;
+  background-color: #6797ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button-container button:hover {
+  background-color: #577edc;
+}
+
+.button-container input {
+  margin-right: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.selected-region {
+  padding-left: 10px;
+  margin-bottom: 30px;
+}
+
+.selected-region input {
+  padding: 4px;
+  margin-left: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.selected-region button {
+  font-size: 14px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 20px;
+}
+
+.selected-region button:hover {
+  background-color: #c0392b;
+}
+
+</style>

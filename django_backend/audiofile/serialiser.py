@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import AudioFile
+from .models import TextFile
 
-class AudioFileSerializer(serializers.ModelSerializer):
+class TextFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AudioFile
+        model = TextFile
         fields = ('file',)
