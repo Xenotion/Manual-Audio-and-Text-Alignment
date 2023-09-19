@@ -102,17 +102,20 @@ export default {
 
 <style lang="scss">
 .editing-view {
-  margin-top: 250px;
-  width: 1100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  
 }
 
 .inputs-container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 800px;
+  margin-top: 20px;
 }
 
 .text-content {

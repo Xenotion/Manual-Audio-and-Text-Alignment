@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <header>
-      <div class="logo">
+      <!--<div class="logo">
         <img src="@/assets/CLARA.png" alt="Logo">
-      </div>
+      </div> -->
       <nav>
         <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link>
@@ -14,7 +14,6 @@
 </template>
 
 <style lang="scss">
-
 #app {
   display: flex;
   flex-direction: column;
@@ -22,25 +21,23 @@
   justify-content: center;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
 }
 
 nav {
-  padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
 }
 
 nav a {
   text-decoration: none;
-  margin: 0 10px;
   color: #333;
   font-weight: bold;
+  margin: 0 15px; /* Adjust spacing between links */
   transition: color 0.3s ease-in-out;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #6797ff;
 }
 
 header {
@@ -53,7 +50,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 5%;
+  padding: 20px 5%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .logo img {
