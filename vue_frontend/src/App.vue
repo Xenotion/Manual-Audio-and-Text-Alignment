@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <header>
-      <!--<div class="logo">
+      <div class="logo">
         <img src="@/assets/CLARA.png" alt="Logo">
-      </div> -->
+      </div>
       <nav>
         <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link>
@@ -50,7 +50,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 5%;
+  padding: 0px 5%;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
