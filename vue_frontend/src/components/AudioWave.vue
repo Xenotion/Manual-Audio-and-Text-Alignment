@@ -182,6 +182,13 @@ export default {
     // Initialize the Timeline plugin
     ws.registerPlugin(TimelinePlugin.create())
 
+    // Play on click
+    ws.on('interaction', () => {
+      // disabled for now
+      //this.togglePlayPause();
+    })
+
+
     // When the audio starts playing
     ws.on('play', () => {
       this.isPlaying = true;
@@ -214,9 +221,10 @@ export default {
 
     this.$data.wsRegions = wsRegions; // Store wsRegions reference
 
-    wsRegions.enableDragSelection({
-      color: 'rgba(255, 0, 0, 0.1)',
-    });
+    // create region on drag
+    // wsRegions.enableDragSelection({
+    //   color: 'rgba(255, 0, 0, 0.1)',
+    // });
 
     wsRegions.on('region-updated', (region) => {
       console.log('Updated region', region);
@@ -235,7 +243,8 @@ export default {
         this.activeRegion = region
       })
       wsRegions.on('region-out', (region) => {
-        if (this.activeRegion === region) {
+       
+        if (this.activeRegion && this.activeRegion.id == region.id) {
           if (loop) {
             region.play()
           } else {
