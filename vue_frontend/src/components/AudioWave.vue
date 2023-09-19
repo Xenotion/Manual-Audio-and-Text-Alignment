@@ -3,7 +3,7 @@
   <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="newRegionName" placeholder="Enter Segment Label" />
+    <input type="text" v-model="newRegionName" placeholder="Enter Segment Name (optional)" />
 
     <button @click="addRegion">Add New Segment</button>
     <p>
@@ -19,9 +19,7 @@
         Volume:
         <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
       </label>
-      <label style="margin-left: 2em">
-        <button @click="exportRegionsToTextFile">Download Info (Test)</button>
-      </label>
+      
     </p>
   </div>
 
@@ -67,12 +65,31 @@ export default {
       activeRegion: null,
       isPlaying: false,
       newRegionName: '',
-      // TODO Loop through this array of region to get times?
-      regions: [], // Store regions here
-
       selectedSegmentNumber: 0,
+      lastAssignedNumber:0,
       segmentNumbers: new Map(), // maps segments to numbers
     };
+  },
+  watch: {
+    '$data.wsRegions.regions': {
+      handler(newRegions, oldRegions) {
+        
+        console.log('The regions array has changed:', newRegions);
+       
+        this.emitRegionsChanged();
+      },
+      deep: true, 
+    },
+    segmentNumbers:{
+      handler(newSegments, old) { 
+        this.emitRegionsChanged();
+      },
+      deep: true, 
+    }
+  
+  },
+  computed:{
+   
   },
 
   methods: {
@@ -91,15 +108,15 @@ export default {
     },
 
     addRegion() {
-      const wsRegions = this.$data.wsRegions;
+      //const wsRegions = this.$data.wsRegions;
       // Starts new regions where user is paused
       const currentTime = this.$data.ws.getCurrentTime();
       const start = currentTime
       const end = start + 10
-      const content = this.newRegionName;
+      const content = this.newRegionName? this.newRegionName : 'unnamed region';
       const color = this.randomColor();
       // todo need to add the label/segment number to region info to parse onto textfile
-      const newRegion = wsRegions.addRegion({
+      const newRegion = this.$data.wsRegions.addRegion({
         start,
         end,
         content,
@@ -107,19 +124,19 @@ export default {
         resize: true,
       });
 
-      this.regions.push(newRegion); // Adds new region to array
       // Clear the new region name
       this.newRegionName = '';
+      this.selectedSegmentNumber = this.lastAssignedNumber +1;
+      this.segmentNumbers.set(newRegion.id, this.selectedSegmentNumber);
+      this.lastAssignedNumber = this.selectedSegmentNumber;
     },
 
     deleteActiveRegion(){
       if(!this.activeRegion){
         return;
       }
-      this.$data.wsRegions.regions.pop(this.activeRegion);
-
-      this.regions.pop(this.activeRegion);
       this.activeRegion.remove();
+      this.$data.wsRegions.regions.pop(this.activeRegion);
       this.segmentNumbers.delete(this.activeRegion.id);
       this.activeRegion = null;
 
@@ -129,6 +146,7 @@ export default {
       console.log(this.selectedSegmentNumber);
       // TODO: check if segment number taken at the end
       this.segmentNumbers.set(this.activeRegion.id, this.selectedSegmentNumber);
+      this.lastAssignedNumber = this.selectedSegmentNumber ;
       // TODO: reflect this in the label
       //this.activeRegion.content.innerHTML += "#" + this.selectedSegmentNumber;
     },
@@ -146,28 +164,29 @@ export default {
       this.$data.ws.zoom(minPxPerSec);
     },
 
+    // format the regions for output
+    getOutputRegions(){
+      var regions = this.$data.wsRegions.regions.map(region => ({
+        "id":region.id,
+        "label": this.segmentNumbers.has(region.id)? this.segmentNumbers.get(region.id):0,
+        "name": region.content.innerHTML, // assume always have content
+        // always round to two decimal places?
+        "startTime": region.start.toFixed(2),
+        "endTime": region.end.toFixed(2)
+      })).sort();
+      regions.sort((a, b) => a.label - b.label);
+
+      return regions;
+    },
+
+    emitRegionsChanged(){
+      
+      this.$emit('regionsChanged', this.getOutputRegions());
+    },
+
     // Read array of regions
 
-    exportRegionsToTextFile() {
-      if (this.regions.length === 0) {
-        console.warn('No regions to export.');
-        return;
-      }
-
-      const content = this.regions.map(region => {
-        // todo Fix what the file shows
-        return `{ "label": ${region.id}, "Start time": ${region.start}, "End time": ${region.end} }`;
-      }).join('\n');
-
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'segmentedAudio.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+    
   },
 
   mounted() {
@@ -228,6 +247,9 @@ export default {
 
     wsRegions.on('region-updated', (region) => {
       console.log('Updated region', region);
+      this.activeRegion = region;
+      console.log(this.$data.wsRegions.regions)
+      this.emitRegionsChanged();
     });
 
     // Loop a region on click
@@ -268,7 +290,7 @@ export default {
         if(this.segmentNumbers.has(region.id)){
           this.selectedSegmentNumber = this.segmentNumbers.get(region.id);
         }else{
-          this.selectedSegmentNumber += 1;
+          this.selectedSegmentNumber = this.lastAssignedNumber +1;
         }
       })
       // Reset the active region when the user clicks anywhere in the waveform
