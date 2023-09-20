@@ -12,7 +12,11 @@
         <input type="checkbox" v-model="loop" />
         Loop regions
       </label>
+    </p>
 
+  </div>
+  <div class ="sliders-container">
+    <p>
       <label style="margin-left: 2em">
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
       </label>
@@ -252,25 +256,27 @@ export default {
 
 #waveform {
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .divider {
-  border-top: 2px solid #ccc;
+  border-top: 1px solid #000000;
   margin: 20px 0;
 }
 
 .button-container {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   // border: 1px solid #ccc;
   // border-radius: 4px;
   padding: 0px 10px;
 }
 
 .button-container button {
-  margin-right: 10px;
+  margin-right: 40px;
   font-size: 14px;
   padding: 5px 5px;
   background-color: #6797ff;
@@ -285,8 +291,9 @@ export default {
   background-color: #577edc;
 }
 
-.button-container input {
-  margin-right: 10px;
+.button-container input[type="text"] {
+  width: 250px;
+  margin-right: 40px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
