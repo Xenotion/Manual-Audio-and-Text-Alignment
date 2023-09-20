@@ -123,6 +123,8 @@ export default {
 
     },
 
+
+    // Create downloadable text file for segment information
     exportRegionsToTextFile() {
       if (this.createdSegments === 0) {
         console.warn('No regions to export.');

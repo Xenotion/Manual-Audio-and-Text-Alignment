@@ -3,7 +3,7 @@
   <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="newRegionName" placeholder="Enter Segment Name (optional)" />
+    <input type="text" v-model="newRegionName" placeholder="Description (Optional)" />
 
     <button @click="addRegion">Add New Segment</button>
     <p>
@@ -131,16 +131,34 @@ export default {
       this.lastAssignedNumber = this.selectedSegmentNumber;
     },
 
-    deleteActiveRegion(){
-      if(!this.activeRegion){
+    // deleteActiveRegion(){
+    //   if(!this.activeRegion){
+    //     return;
+    //   }
+    //   this.activeRegion.remove();
+    //   this.$data.wsRegions.regions.pop(this.activeRegion);
+    //   this.segmentNumbers.delete(this.activeRegion.id);
+    //   this.activeRegion = null;
+    //
+    // },
+
+    deleteActiveRegion() {
+      if (!this.activeRegion) {
         return;
       }
-      this.activeRegion.remove();
-      this.$data.wsRegions.regions.pop(this.activeRegion);
+      // Find the index of the activeRegion in the array
+      const index = this.$data.wsRegions.regions.findIndex(region => region === this.activeRegion);
+
+      if (index !== -1) {
+        // Remove the activeRegion from the array
+        this.$data.wsRegions.regions.splice(index, 1);
+      }
+
       this.segmentNumbers.delete(this.activeRegion.id);
       this.activeRegion = null;
-
     },
+
+
 
     updateSegmentNumber(){
       console.log(this.selectedSegmentNumber);
