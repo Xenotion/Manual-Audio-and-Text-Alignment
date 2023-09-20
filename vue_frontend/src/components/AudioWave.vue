@@ -3,7 +3,7 @@
   <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="newRegionName" placeholder="Description (Optional)" />
+    <input type="text" v-model="description" placeholder="Description (Optional)" />
 
     <button @click="addRegion">Add New Segment</button>
     <p>
@@ -18,6 +18,8 @@
     <p>
       <label style="margin-left: 2em">
         Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
+        <button @click="zoomIn">Zoom In</button>
+        <button @click="zoomOut">Zoom Out</button>
       </label>
       <label style="margin-left: 2em">
         Volume:
@@ -26,6 +28,8 @@
       
     </p>
   </div>
+
+
 
   <div class="divider"></div>
 
@@ -45,6 +49,15 @@
         :max="maxSegmentNumber"
         />
       <button @click="updateSegmentNumber">Confirm</button>
+      <br>
+      <br>
+      New description:
+      <input
+          type="text"
+          id="textInput"
+          v-model.number="selectedDescription"
+      />
+      <button @click="updateDescription">Confirm</button>
     </p>
     <div v-if="activeRegion" class="divider"></div>
   </div>
@@ -64,11 +77,11 @@ export default {
   data() {
     return {
       loop: true,
-      zoomValue: 10,
+      zoomValue: 0.5,
       volume:0.5,
       activeRegion: null,
       isPlaying: false,
-      newRegionName: '',
+      description: '',
       selectedSegmentNumber: 0,
       lastAssignedNumber:0,
       segmentNumbers: new Map(), // maps segments to numbers
@@ -117,7 +130,7 @@ export default {
       const currentTime = this.$data.ws.getCurrentTime();
       const start = currentTime
       const end = start + 10
-      const content = this.newRegionName? this.newRegionName : 'unnamed region';
+      const content = this.description? this.description : 'unnamed region';
       const color = this.randomColor();
       // todo need to add the label/segment number to region info to parse onto textfile
       const newRegion = this.$data.wsRegions.addRegion({
@@ -146,13 +159,14 @@ export default {
     //
     // },
 
+
+
     deleteActiveRegion() {
       if (!this.activeRegion) {
         return;
       }
       // Find the index of the activeRegion in the array
       const index = this.$data.wsRegions.regions.findIndex(region => region === this.activeRegion);
-
       if (index !== -1) {
         // Remove the activeRegion from the array
         this.$data.wsRegions.regions.splice(index, 1);
@@ -173,6 +187,20 @@ export default {
       //this.activeRegion.content.innerHTML += "#" + this.selectedSegmentNumber;
     },
 
+
+    // Update description
+    updateDescription() {
+      if (this.activeRegion && this.selectedDescription) {
+        this.activeRegion.description =  this.selectedDescription;
+        this.activeRegion.content.innerHTML = this.selectedDescription;
+      }
+    },
+
+
+
+
+
+
     random(min, max) {
       return Math.random() * (max - min) + min;
     },
@@ -181,10 +209,23 @@ export default {
       return `rgba(${this.random(0, 255)}, ${this.random(0, 255)}, ${this.random(0, 255)}, 0.5)`;
     },
 
+    // Zoom functionality
+
     updateZoom() {
       const minPxPerSec = Number(this.zoomValue);
       this.$data.ws.zoom(minPxPerSec);
     },
+
+    zoomIn() {
+      this.zoomValue = Math.min(1000, this.zoomValue + 10);
+      this.updateZoom();
+    },
+
+    zoomOut() {
+      this.zoomValue = Math.max(10, this.zoomValue - 10);
+      this.updateZoom();
+    },
+
 
     // format the regions for output
     getOutputRegions(){
