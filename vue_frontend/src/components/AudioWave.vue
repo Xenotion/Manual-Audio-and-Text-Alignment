@@ -152,10 +152,10 @@ export default {
       if (index !== -1) {
         // Remove the activeRegion from the array
         this.$data.wsRegions.regions.splice(index, 1);
+        this.activeRegion.remove();
+        this.segmentNumbers.delete(this.activeRegion.id);
+        this.activeRegion = null;
       }
-
-      this.segmentNumbers.delete(this.activeRegion.id);
-      this.activeRegion = null;
     },
 
 
