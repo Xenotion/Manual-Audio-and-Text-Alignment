@@ -1,4 +1,4 @@
-# ITProject
+# Manual Audio/Text Alignment Project for C-LARA
 
 # 2023 Semester 2 COMP30023
 ----
