@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <header>
-      <div class="logo">
+      <!-- <div class="logo">
         <img src="@/assets/CLARA.png" alt="Logo">
       </div>
       <nav>
         <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link>
-      </nav>
+      </nav> -->
     </header>
     <router-view/>
   </div>
@@ -19,9 +19,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   font-family: 'Arial', sans-serif;
   background-color: #ffffff;
+  overflow: hidden;
+  
 }
 
 nav {

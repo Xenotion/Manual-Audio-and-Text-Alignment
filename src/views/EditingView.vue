@@ -35,12 +35,14 @@
           <h3>
             Created Segments
           </h3>
-          <div class="segment-item"
-            v-for="segment in createdSegments" :key="segment.id">
-            <b>|{{ segment.label }}|</b> : {{ segment.name }} <br>
-            {{ segment.startTime }} - {{ segment.endTime }}
+          <div class="segments-list">
+            <div class="segment-item"
+              v-for="segment in createdSegments" :key="segment.id">
+              <b>|{{ segment.label }}|</b> : {{ segment.name }} <br>
+              {{ segment.startTime }} - {{ segment.endTime }}
+            </div>
           </div>
-
+          <br>
           <button @click="exportRegionsToTextFile">Download Segments</button>
      
         </div>
@@ -156,26 +158,22 @@ export default {
 
 <style lang="scss">
 .editing-view {
-  height: 100vh;
-  margin-top: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
   width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 50px;
 }
 
 .main-container {
   display: flex;
   padding: 50px;
+  height: 100%;
   width: 100%;
-  //height: 700px;
-  max-width: 1200px;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #ccc; 
-
 }
 
 .edit-inputs-container {
@@ -198,15 +196,21 @@ export default {
 }
 
 .sidebar {
-  width: 300px;
-  padding: 20px;
-  
+  // max-height: 60vh;
+  // overflow-y: scroll;
+  width: 400px;
+  padding: 50px;
   border-left: 1px solid #000000; /* Add a vertical line */
   padding-left: 20px; /* Add some padding to separate the content from the line */
 }
 
+.segments-list{
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
 .segment-item {
-  width:100%;
+  width: 70%;
   padding: 10px;
   margin:10px;
   border-radius: 20px;
@@ -214,4 +218,5 @@ export default {
   //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #ccc; 
 }
+  
 </style>

@@ -3,7 +3,7 @@
   <div class ="button-container">
     <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="description" placeholder="Description (Optional)" />
+    <input type="text" v-model="description" placeholder="Segment name (Optional)" />
 
     <button @click="addRegion">Add New Segment</button>
     <p>
@@ -17,9 +17,9 @@
   <div class ="sliders-container">
     <p>
       <label style="margin-left: 2em">
-        Zoom: <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
-        <button @click="zoomIn">Zoom In</button>
         <button @click="zoomOut">Zoom Out</button>
+        <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
+        <button @click="zoomIn">Zoom In</button>
       </label>
       <label style="margin-left: 2em">
         Volume:
@@ -32,15 +32,15 @@
 
 
   <div class="divider"></div>
-
   <div class ="selected-region">
+    <div v-if="activeRegion" class="divider"></div>
     <p v-if="activeRegion">
-      <b>Selected segment: {{ !activeRegion.content? 'unnamed region' : activeRegion.content.innerHTML }}</b>
-      <b v-if="segmentNumbers.has(activeRegion.id)">Assigned to : |{{ segmentNumbers.get(activeRegion.id)}}|</b>
+      <b>Segment {{ !activeRegion.content? '(unnamed)' : activeRegion.content.innerHTML }}</b>
+      <b v-if="segmentNumbers.has(activeRegion.id)"> assigned to: |{{ segmentNumbers.get(activeRegion.id)}}|</b>
       <button @click="deleteActiveRegion">Delete</button>
       <br>
       <br>
-      Assign/reassign segment number:
+      Reassign segment number:
       <input
         type="number"
         id="numberInput"
@@ -51,7 +51,7 @@
       <button @click="updateSegmentNumber">Confirm</button>
       <br>
       <br>
-      New description:
+      Rename:
       <input
           type="text"
           id="textInput"
@@ -59,7 +59,6 @@
       />
       <button @click="updateDescription">Confirm</button>
     </p>
-    <div v-if="activeRegion" class="divider"></div>
   </div>
 </template>
 
@@ -130,7 +129,7 @@ export default {
       const currentTime = this.$data.ws.getCurrentTime();
       const start = currentTime
       const end = start + 10
-      const content = this.description? this.description : 'unnamed region';
+      const content = this.description? this.description : '(unnamed)';
       const color = this.randomColor();
       // todo need to add the label/segment number to region info to parse onto textfile
       const newRegion = this.$data.wsRegions.addRegion({
@@ -255,8 +254,8 @@ export default {
   mounted() {
     const ws = WaveSurfer.create({
       container: '#waveform',
-      waveColor: 'rgb(200, 0, 200)',
-      progressColor: 'rgb(100, 0, 100)',
+      waveColor: 'rgb(0, 126, 236)',
+      progressColor: 'rgb(0, 85, 159)',
     });
 
     this.$data.ws = ws; // Store ws reference
@@ -370,7 +369,7 @@ export default {
 #waveform {
   margin-bottom: 20px;
   width: 100%;
-  max-width: 800px;
+  max-width: 120vh;
 }
 
 .divider {
@@ -392,7 +391,7 @@ export default {
   margin-right: 40px;
   font-size: 14px;
   padding: 5px 5px;
-  background-color: #6797ff;
+  background-color: rgb(0, 126, 236);
   color: white;
   border: none;
   border-radius: 4px;
@@ -401,7 +400,7 @@ export default {
 }
 
 .button-container button:hover {
-  background-color: #577edc;
+  background-color: rgb(0, 85, 159);
 }
 
 .button-container input[type="text"] {
@@ -413,8 +412,12 @@ export default {
 }
 
 .selected-region {
-  padding-left: 10px;
-  margin-bottom: 30px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 350px;
+  padding: 20px;
+  padding-left: 20px;
 }
 
 .selected-region input {
@@ -428,7 +431,7 @@ export default {
 .selected-region button {
   font-size: 14px;
   padding: 5px 10px;
-  background-color: #e74c3c;
+  background-color: rgb(0, 126, 236);
   color: white;
   border: none;
   border-radius: 4px;
@@ -438,7 +441,7 @@ export default {
 }
 
 .selected-region button:hover {
-  background-color: #c0392b;
+  background-color:rgb(0, 85, 159);
 }
 
 </style>

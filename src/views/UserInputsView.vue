@@ -126,9 +126,15 @@ export default {
 }
 
 .inputs-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding-top: 200px;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
