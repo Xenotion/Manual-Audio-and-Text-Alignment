@@ -1,65 +1,64 @@
 <template>
   <div id="waveform"></div>
-  <div class ="button-container">
-    <button @click="togglePlayPause">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <input type="text" v-model="description" placeholder="Segment name (Optional)" />
+  <div class = "container">
+    <div>
+      <div class ="button-container">
+        <button @click="togglePlayPause" style="margin-right: 40px; width: 50px;">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
-    <button @click="addRegion">Add New Segment</button>
-    <p>
-      <label>
-        <input type="checkbox" v-model="loop" />
-        Loop regions
-      </label>
-    </p>
+          <label style="margin-right: 40px;">
+            Volume:
+            <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
+          </label>
+          <label style="margin-right: 40px;">
+            <button id="zoom-out" @click="zoomOut" style="width: 25px;">-</button>
+            <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
+            <button id="zoom-in" @click="zoomIn" style="width: 25px;">+</button>
+          </label>
+        <p>
+          <label>
+            <input type="checkbox" v-model="loop" />
+            Loop regions
+          </label>
+        </p>
+      </div>
+      <div class = "button-container">
+        <input type="text" v-model="description" placeholder="Segment name" />
+        <button @click="addRegion">New Segment</button>
+      </div>
+    </div>
 
+
+    <div class ="selected-region">
+      <p v-if="activeRegion">
+        <b>Segment  <!-- {{ !activeRegion.content? '(unnamed)' : activeRegion.content.innerHTML }} --> </b>
+        <b v-if="segmentNumbers.has(activeRegion.id)"> number: |{{ segmentNumbers.get(activeRegion.id)}}|</b>
+        <button @click="deleteActiveRegion" style="margin-bottom: 10px;">Delete</button>
+        <br>
+        Reassign number:
+        <input
+          type="number"
+          id="numberInput"
+          v-model.number="selectedSegmentNumber"
+          min="1"
+          :max="maxSegmentNumber"
+          style="width: 35px;"
+          />
+        <button @click="updateSegmentNumber" style="margin-bottom: 10px;">Confirm</button>
+        <br>
+        Rename:
+        <input
+            type="text"
+            id="textInput"
+            v-model.number="selectedDescription"
+            style="width: 100px;"
+        />
+        <button @click="updateDescription">Confirm</button>
+      </p>
+    </div>
   </div>
-  <div class ="sliders-container">
-    <p>
-      <label style="margin-left: 2em">
-        <button @click="zoomOut">Zoom Out</button>
-        <input type="range" min="10" max="1000" v-model="zoomValue" @input="updateZoom" />
-        <button @click="zoomIn">Zoom In</button>
-      </label>
-      <label style="margin-left: 2em">
-        Volume:
-        <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="updateVolume" />
-      </label>
-      
-    </p>
-  </div>
-
-
 
   <div class="divider"></div>
-  <div class ="selected-region">
-    <div v-if="activeRegion" class="divider"></div>
-    <p v-if="activeRegion">
-      <b>Segment {{ !activeRegion.content? '(unnamed)' : activeRegion.content.innerHTML }}</b>
-      <b v-if="segmentNumbers.has(activeRegion.id)"> assigned to: |{{ segmentNumbers.get(activeRegion.id)}}|</b>
-      <button @click="deleteActiveRegion">Delete</button>
-      <br>
-      <br>
-      Reassign segment number:
-      <input
-        type="number"
-        id="numberInput"
-        v-model.number="selectedSegmentNumber"
-        min="1"
-        :max="maxSegmentNumber"
-        />
-      <button @click="updateSegmentNumber">Confirm</button>
-      <br>
-      <br>
-      Rename:
-      <input
-          type="text"
-          id="textInput"
-          v-model.number="selectedDescription"
-      />
-      <button @click="updateDescription">Confirm</button>
-    </p>
-  </div>
 </template>
 
 <script>
@@ -377,18 +376,21 @@ export default {
   margin: 20px 0;
 }
 
+
+.button-container button:hover {
+  background-color: rgb(0, 85, 159);
+}
+
 .button-container {
   display: flex;
-  // justify-content: space-between;
+  width: 700px;
   align-items: center;
   margin-bottom: 0px;
-  // border: 1px solid #ccc;
-  // border-radius: 4px;
-  padding: 0px 10px;
 }
 
 .button-container button {
-  margin-right: 40px;
+  margin-right: 0px;
+  height: 27px;
   font-size: 14px;
   padding: 5px 5px;
   background-color: rgb(0, 126, 236);
@@ -404,24 +406,21 @@ export default {
 }
 
 .button-container input[type="text"] {
-  width: 250px;
-  margin-right: 40px;
+  width: 200px;
+  height: 25px;
+  margin-right: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 4px;
 }
 
 .selected-region {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 350px;
-  padding: 20px;
-  padding-left: 20px;
+  display: flex;
+  width: 300px;
 }
 
 .selected-region input {
-  padding: 4px;
+  height: 25px;
   margin-left: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -429,6 +428,7 @@ export default {
 }
 
 .selected-region button {
+  height: 25px;
   font-size: 14px;
   padding: 5px 10px;
   background-color: rgb(0, 126, 236);
@@ -444,4 +444,11 @@ export default {
   background-color:rgb(0, 85, 159);
 }
 
+.container {
+  height: 100px;
+  position: relative;
+  display: flex;
+  justify-content: space-between; /* Align items to the beginning and end of the container */
+  align-items: center; /* Vertically center the items */
+}
 </style>

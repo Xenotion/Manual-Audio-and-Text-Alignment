@@ -158,6 +158,8 @@ export default {
 
 <style lang="scss">
 .editing-view {
+  overflow-y: scroll;
+  overflow-x: hidden;
   position: fixed;
   top: 0;
   left: 0;
@@ -168,12 +170,10 @@ export default {
 .main-container {
   display: flex;
   padding: 50px;
-  height: 100%;
+  height: 800px;
   width: 100%;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ccc; 
 }
 
 .edit-inputs-container {
@@ -196,8 +196,7 @@ export default {
 }
 
 .sidebar {
-  // max-height: 60vh;
-  // overflow-y: scroll;
+  max-height: 80vh;
   width: 400px;
   padding: 50px;
   border-left: 1px solid #000000; /* Add a vertical line */
@@ -205,7 +204,7 @@ export default {
 }
 
 .segments-list{
-  max-height: 50vh;
+  max-height: 65vh;
   overflow-y: scroll;
 }
 

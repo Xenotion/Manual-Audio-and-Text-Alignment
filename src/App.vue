@@ -21,8 +21,6 @@
   justify-content: center;
   font-family: 'Arial', sans-serif;
   background-color: #ffffff;
-  overflow: hidden;
-  
 }
 
 nav {
