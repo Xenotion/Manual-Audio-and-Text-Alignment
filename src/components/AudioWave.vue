@@ -255,6 +255,7 @@ export default {
       container: '#waveform',
       waveColor: 'rgb(0, 126, 236)',
       progressColor: 'rgb(0, 85, 159)',
+      //url:'https://c-lara.s3.amazonaws.com/tmp/tmph3h5qajj.mp3?AWSAccessKeyId=AKIAW5BMO34KLGGFJ7V3&Signature=d1GuTHh1G0Chra4IfDpK9bEn4iY%3D&Expires=1697625408',
     });
 
     this.$data.ws = ws; // Store ws reference
@@ -296,7 +297,7 @@ export default {
     })
 
     // Applying regions
-    ws.loadBlob(this.audioFile);
+    //ws.loadBlob(this.audioFile);
     const wsRegions = ws.registerPlugin(RegionsPlugin.create());
 
     this.$data.wsRegions = wsRegions; // Store wsRegions reference

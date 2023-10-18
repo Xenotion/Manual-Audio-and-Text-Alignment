@@ -87,7 +87,7 @@ export default {
       
 
     // Display audio and text name
-    this.audioFileName = this.audioFile.name;
+    //this.audioFileName = this.audioFile.name;
     this.textFileName = this.textFile.name;
   },
 

@@ -92,10 +92,9 @@ export default {
                 backendService.getProjectFiles(this.projectId)
                     .then(res =>{
                         if(res){
-                            this.textFile = new Blob([res["labelled_segmented_text"]], {
-                                type: "text/plain;charset=utf-8",
-                            }); 
-
+                            this.textFile = res.textFile;
+                            
+                            this.audioFile = res.audioFile;
 
                             this.inEditMode = true;
                         }

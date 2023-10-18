@@ -2,6 +2,10 @@ import axios from 'axios';
 
 // edit this in .env file
 const API_URL = process.env.VUE_APP_API_URL;
+interface ProjectFiles {
+    audioFile: Blob | null;
+    textFile: Blob | null;
+}
 export default class backendService{
 
 
@@ -37,17 +41,60 @@ export default class backendService{
         return result.data
     }
 
+
+    
     public async getProjectFiles(projectId: number){
         //https://stackoverflow.com/questions/61150129/cross-origin-request-blocked-on-axios-post-request-vuejs
+        //const result = await axios.get(`https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/139/`);
         const result = await axios({
             method:'GET', 
-            url: `https://cors-anywhere.herokuapp.com/https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/${projectId}`,
+            url: `https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/${projectId}/`,
             headers: {
-                'Access-Control-Allow-Origin': '*',
+                //'Access-Control-Allow-Origin': '*',
                 'Content-type': 'application/json',
              }});
-        console.log(result.data);
-        return result.data;
+       
+
+      
+        const text_content = result.data["labelled_segmented_text"];
+        const audio_url = result.data["s3_audio_link"];
+        const files: ProjectFiles ={
+            audioFile: null,
+            textFile: null
+        }
+        if(text_content){
+            files.textFile = new Blob([text_content], {
+                type: "text/plain;charset=utf-8",
+            }); 
+        }
+
+        if(audio_url){
+            //files.audio_file = await this.fetchAudioBlob(audio_url);
+        }
+
+        
+        
+
+        console.log(files);
+        
+        return files;
     }
+
+    // turns an audio url to a blob
+    async fetchAudioBlob(audio_url: string): Promise<Blob | null> {
+        try {
+          const response = await fetch(audio_url);
+          if (response.ok) {
+            const data = await response.arrayBuffer();
+            return new Blob([data], { type: 'audio/mpeg' });
+          } else {
+            console.error('Audio fetch failed with status:', response.status);
+            return null;
+          }
+        } catch (error) {
+          console.error('Error fetching audio:', error);
+          return null;
+        }
+      }
     
 }
