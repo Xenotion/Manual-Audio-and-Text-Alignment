@@ -48,7 +48,7 @@ export default class backendService{
         //const result = await axios.get(`https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/139/`);
         const result = await axios({
             method:'GET', 
-            url: `https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/${projectId}/`,
+            url: `${API_URL}/manual_audio_alignment_integration_endpoint1/${projectId}/`,
             headers: {
                 //'Access-Control-Allow-Origin': '*',
                 'Content-type': 'application/json',
@@ -69,7 +69,7 @@ export default class backendService{
         }
 
         if(audio_url){
-            //files.audio_file = await this.fetchAudioBlob(audio_url);
+            files.audioFile = await this.fetchAudioBlob(audio_url);
         }
 
         
@@ -84,17 +84,16 @@ export default class backendService{
     async fetchAudioBlob(audio_url: string): Promise<Blob | null> {
         try {
           const response = await fetch(audio_url);
-          if (response.ok) {
-            const data = await response.arrayBuffer();
-            return new Blob([data], { type: 'audio/mpeg' });
-          } else {
-            console.error('Audio fetch failed with status:', response.status);
-            return null;
-          }
+          const data = await response.blob();
+          console.log(response);
+          return data;
+          //return new Blob([data], { type: 'audio/mpeg' });
+         
         } catch (error) {
           console.error('Error fetching audio:', error);
           return null;
         }
-      }
+    }
+      
     
 }
