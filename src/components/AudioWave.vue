@@ -297,7 +297,7 @@ export default {
     })
 
     // Applying regions
-    //ws.loadBlob(this.audioFile);
+    ws.loadBlob(this.audioFile);
     const wsRegions = ws.registerPlugin(RegionsPlugin.create());
 
     this.$data.wsRegions = wsRegions; // Store wsRegions reference
