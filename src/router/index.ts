@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
   // }
 
   // when no route found
-  { path: "*", redirect: "/" }
+
 ]
 
 const router = createRouter({
