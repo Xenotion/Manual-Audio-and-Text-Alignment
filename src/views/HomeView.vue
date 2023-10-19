@@ -49,6 +49,8 @@ export default {
 
             isTest: false, // toggles the testing components
             inEditMode: false, // toggles editing view
+
+            projectId: null, // get projectId from url
         }
     },
     computed:{
@@ -82,6 +84,23 @@ export default {
             this.audioFile=userInputs['audioFile'];
             this.textFile=userInputs['textFile'];
             this.inEditMode = true;
+        },
+        
+        // get files from api
+        getProjectFiles(){
+            if(this.projectId){
+                backendService.getProjectFiles(this.projectId)
+                    .then(res =>{
+                        if(res){
+                            this.textFile = res.textFile;
+                            
+                            this.audioFile = res.audioFile;
+
+                            this.inEditMode = true;
+                        }
+                    })
+            }
+            
         }
 
 
@@ -90,6 +109,10 @@ export default {
     created(){
         // run after the page is created (?)
         //this.getAudioFiles();
+
+        // get projectId from url
+        this.projectId = this.$route.params.projectId;
+        this.getProjectFiles();
     },
 
 }
