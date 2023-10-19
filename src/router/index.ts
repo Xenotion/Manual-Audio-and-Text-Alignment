@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserIputs from '../views/UserInputsView.vue'
 import EditingView from '../views/EditingView.vue'
@@ -26,11 +26,11 @@ const routes: Array<RouteRecordRaw> = [
   // }
 
   // when no route found
-
+  //{ path: "*", redirect: "/" }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
