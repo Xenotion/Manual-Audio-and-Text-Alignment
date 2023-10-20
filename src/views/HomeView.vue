@@ -1,4 +1,10 @@
 <template>
+     <loading v-model:active="isLoading"
+                 :can-cancel="false"
+             
+                 :is-full-page="true"
+                 after="<b>loading<b>"
+                 />
     <div class="home" v-if="isTest">
         <div>
             <AudioWave v-if="audioFile"  :audioFile="audioFile" />
@@ -26,6 +32,8 @@ import AudioFileListItem from "../components/AudioFileListItem.vue"
 import AudioWave from "../components/AudioWave.vue"
 import UserInputsView from "../views/UserInputsView.vue"
 import EditingView from "../views/EditingView.vue"
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
 export default {
@@ -36,7 +44,7 @@ export default {
         AudioWave,
         UserInputsView,
         EditingView,
-
+        Loading,
 
     },
     data(){
@@ -51,6 +59,8 @@ export default {
             inEditMode: false, // toggles editing view
 
             projectId: null, // get projectId from url
+
+            isLoading: false, // controls loading screen
         }
     },
     computed:{
@@ -88,7 +98,9 @@ export default {
         
         // get files from api
         getProjectFiles(){
+            
             if(this.projectId){
+                this.isLoading = true;
                 backendService.getProjectFiles(this.projectId)
                     .then(res =>{
                         if(res){
@@ -97,7 +109,9 @@ export default {
                             this.audioFile = res.audioFile;
 
                             this.inEditMode = true;
+                            
                         }
+                        this.isLoading = false;
                     })
             }
             
