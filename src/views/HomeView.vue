@@ -1,5 +1,6 @@
 <template>
-     <loading v-model:active="isLoading"
+    
+    <loading v-model:active="isLoading"
                  :can-cancel="false"
              
                  :is-full-page="true"
@@ -15,6 +16,13 @@
             </ul>
         </div>
     </div>
+
+    <!-- I have no idea why this does not show -->
+    <div class="error-message" v-if="loadingError">
+        An error occurred while loading the project files.
+    </div>
+
+    
     <UserInputsView v-if="!inEditMode" @goToEditMode="onEditMode"/>
     <EditingView
         v-if="inEditMode"
@@ -61,6 +69,7 @@ export default {
             projectId: null, // get projectId from url
 
             isLoading: false, // controls loading screen
+            loadingError: false, // whether loading project has failed
         }
     },
     computed:{
@@ -103,13 +112,16 @@ export default {
                 this.isLoading = true;
                 backendService.getProjectFiles(this.projectId)
                     .then(res =>{
-                        if(res){
+                        if(res && res.textFile && res.audioFile){
                             this.textFile = res.textFile;
                             
                             this.audioFile = res.audioFile;
 
                             this.inEditMode = true;
                             
+                        }else{
+                            this.loadingError = true;
+                            alert("An error occurred while loading the project files.");
                         }
                         this.isLoading = false;
                     })
@@ -150,6 +162,18 @@ export default {
 .audio-list {
     list-style: none;
     padding: 0;
+}
+.error-message {
+  background-color: #ff6961; /* Red background color */
+  color: #fff; /* White text color */
+  padding: 10px;
+  border: 1px solid #d60000; /* Darker red border */
+  height:50px;
+  border-radius: 5px;
+  margin-top: 10px;
+  display: none; /* Hidden by default */
+
+  /* Add any other styles you want for the error message */
 }
 
 </style>
