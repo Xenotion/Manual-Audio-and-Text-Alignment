@@ -5,11 +5,11 @@
 
 ## Project Description
 
-Welcome to the Manual Audio/Text Alignment Project for C-LARA, developed by Team Slay. This project addresses a critical need within C-LARA, a language learning assistant powered by ChatGPT.
+Welcome to the Manual Audio/Text Alignment Project for C-LARA, developed by Team Slay. This project addresses a critical need within C-LARA.
 
 **C-LARA Overview:**
 
-C-LARA is a rework of the Learning and Reading Assistant (LARA), enhanced by ChatGPT technology. Its primary goal is to revolutionize language learning experiences by creating high-quality multimedia content for language courses. Specifically, it generates and annotates short stories, which are used to enrich language courses with adaptable, engaging content.
+C-LARA is a rework of the Learning and Reading Assistant (LARA), enhanced by ChatGPT. Its primary goal is to revolutionize language learning experiences by creating high-quality multimedia content for language courses. Specifically, it generates and annotates short stories, which are used to enrich language courses with adaptable, engaging content.
 
 **The Challenge:**
 
@@ -30,33 +30,37 @@ Our project aims to simplify this process by creating a web-based audio alignmen
 
 To run the Manual Audio/Text Alignment Project for C-LARA locally, follow these steps:
 
-1. Clone the repository from [GitHub](https://github.com/your-repo-link).
+1. Clone the repository.
 2. Install the necessary dependencies by running `npm install` or `yarn install`.
 3. Configure the required settings, such as database connections or API keys.
 4. Start the application with `npm start` or `yarn start`.
-5. Access the tool in your web browser at `http://localhost:3000`.
+5. Access the tool in your web browser.
+
+Alternatively, visit [our site](https://manual-alignment.netlify.app/)
 
 ## How to Use the Tool
 
 Once the tool is set up and running, you can use it to align audio with text as follows:
 
-1. **Login:** Log in to the tool using your credentials or a demo account (if applicable).
-2. **Upload Files:** Upload your audio and text files from the C-LARA database.
-3. **Align Audio:** Manually align segments of audio with corresponding text by assigning segment numbers.
-4. **Generate Output:** Once alignment is complete, the tool will automatically upload the aligned content to C-LARA.
-5. **View Aligned Content:** Check the C-LARA platform to see your newly aligned multimedia content.
+1. **Upload Files:** Upload your audio and text files locally, or from a C-LARA project.
+2. **Align Audio:** Manually align segments of audio with corresponding text by assigning segment numbers.
+3. **Generate Output:** Once alignment is complete, choose between downloading the output or uploading it to C-LARA.
+4. **View Aligned Content:** Check the C-LARA platform to see your newly aligned multimedia content.
 
 ## Contributors
 
-This project was developed by Team Slay, with [Your Name] serving as the tech lead.
+This project was developed by Team Slay, 2023 Semester 2 COMP30023, The University of Melbourne
 
-- [Contributor 1](https://github.com/contributor1)
-- [Contributor 2](https://github.com/contributor2)
+- [John An](https://github.com/Xenotion)
+- [Kaiyuan Cui](https://github.com/kaiyuanCui)
+- [Natasha Ngo](https://github.com/ngonatasha)
+- [Alex Lee](https://github.com/alsgud)
+- [Sherry Sun]()
 
-We'd like to express our gratitude to the resources and tutorials that helped us during this project:
+We'd like to express our gratitude to the resources that helped us during this project:
 
-- [Resource 1](https://example.com/resource1)
-- [Resource 2](https://example.com/resource2)
+- [Wavesurfer.js](https://wavesurfer.xyz/)
+
 
 ## License
 
@@ -73,44 +77,6 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-
-
-# Manual Audio/Text Alignment Project for C-LARA
-
-# 2023 Semester 2 COMP30023
-----
-# Members
-### John An
-### Kevin Cui
-### Sherry Sun
-### Natasha Ngo
-### Alex Lee
-----
-
-
-----
-# Setup Instructions
-
-## Project setup
-```
-npm install
-```
-
-## Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-## Compiles and minifies for production
-```
-npm run build
-```
-
-## Lints and fixes files
-```
-npm run lint
-```
-----
 
 
 
