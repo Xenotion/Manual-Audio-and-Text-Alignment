@@ -25,9 +25,6 @@ export default class backendService{
 
     }
 
-
-    
-
     public async uploadAudioFile(file: File){
         const formData = new FormData();
         formData.append('file', file);
@@ -41,41 +38,40 @@ export default class backendService{
         return result.data
     }
 
-
-    
     public async getProjectFiles(projectId: number){
         //https://stackoverflow.com/questions/61150129/cross-origin-request-blocked-on-axios-post-request-vuejs
         //const result = await axios.get(`https://c-lara-758a4f81c1ff.herokuapp.com/accounts/manual_audio_alignment_integration_endpoint1/139/`);
-        const result = await axios({
-            method:'GET', 
-            url: `${API_URL}/manual_audio_alignment_integration_endpoint1/${projectId}/`,
-            headers: {
-                //'Access-Control-Allow-Origin': '*',
-                'Content-type': 'application/json',
-             }});
-       
-
-      
-        const text_content = result.data["labelled_segmented_text"];
-        const audio_url = result.data["s3_audio_link"];
         const files: ProjectFiles ={
             audioFile: null,
             textFile: null
         }
-        if(text_content){
-            files.textFile = new Blob([text_content], {
-                type: "text/plain;charset=utf-8",
-            }); 
-        }
-
-        if(audio_url){
-            files.audioFile = await this.fetchAudioBlob(audio_url);
-        }
-
+        try{
+            const result = await axios({
+                method:'GET', 
+                url: `${API_URL}/manual_audio_alignment_integration_endpoint1/${projectId}/`,
+                headers: {
+                    //'Access-Control-Allow-Origin': '*',
+                    'Content-type': 'application/json',
+                 }});
         
-        
-
-        console.log(files);
+            const text_content = result.data["labelled_segmented_text"];
+            const audio_url = result.data["s3_audio_link"];
+            
+            if(text_content){
+                files.textFile = new Blob([text_content], {
+                    type: "text/plain;charset=utf-8",
+                }); 
+            }
+    
+            if(audio_url){
+                files.audioFile = await this.fetchAudioBlob(audio_url);
+            }
+    
+            console.log(files);
+        }
+        catch(error){
+            console.log(error);
+        }
         
         return files;
     }
