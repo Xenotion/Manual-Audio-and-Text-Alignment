@@ -34,21 +34,22 @@
 </template>
 
 <script>
-
+ 
 import BackendService from "../services/backendService.ts"
-import AudioFileListItem from "../components/AudioFileListItem.vue"
 import AudioWave from "../components/AudioWave.vue"
-import UserInputsView from "../views/UserInputsView.vue"
-import EditingView from "../views/EditingView.vue"
+import UserInputsView from "../components/UserInputsView.vue"
+import EditingView from "../components/EditingView.vue"
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
+/**
+ * The main page
+ */
 export default {
     name: 'HomeView',
     components:{
      // add components here
-        AudioFileListItem,
         AudioWave,
         UserInputsView,
         EditingView,
@@ -75,7 +76,6 @@ export default {
     computed:{
 
     },
-
     methods:{
 
         // get audio files from backend
@@ -133,9 +133,7 @@ export default {
 
     },
     created(){
-        // run after the page is created (?)
-        //this.getAudioFiles();
-
+        // run after the page is created
         // get projectId from url
         this.projectId = this.$route.params.projectId;
         this.getProjectFiles();
