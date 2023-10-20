@@ -2,7 +2,6 @@
 
 **Team Name:** Team Slay
 
-
 ## Project Description
 
 Welcome to the Manual Audio/Text Alignment Project for C-LARA, developed by Team Slay. This project addresses a critical need within C-LARA.
@@ -57,9 +56,11 @@ This project was developed by Team Slay, 2023 Semester 2 COMP30023, The Universi
 - [Alex Lee](https://github.com/alsgud)
 - [Sherry Sun]()
 
-We'd like to express our gratitude to the resources that helped us during this project:
+We'd like to express our gratitude to the resources & tools that helped us during this project:
 
 - [Wavesurfer.js](https://wavesurfer.xyz/)
+- [Netlify](https://www.netlify.com)
+- [ChatGPT](https://chat.openai.com)
 
 
 ## License
