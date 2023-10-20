@@ -17,12 +17,12 @@
 </template>
 
 <script>
-
 import BackendService from "../services/backendService.ts"
-
-
 const backendService = new BackendService();
 // we use the Options API Style: https://vuejs.org/guide/introduction.html#single-file-components
+/**
+ * The UI to upload user data
+ */
 export default {
     name: 'UserInputsView',
     components:{
@@ -32,8 +32,6 @@ export default {
     },
     data(){
         return{
-            // TODO: move this into home page and make this a component
-
             username: "",
             textFile: null,
             audioFile: null,

@@ -62,13 +62,23 @@
 </template>
 
 <script>
+
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions'; // Make sure the path is correct
 import TimelinePlugin from "wavesurfer.js/plugins/timeline";
-
+/**
+ * Component to display & control an audio wave
+ */
 export default {
   props:{
+    /**
+     * The audio file
+     */
     audioFile: Blob,
+
+    /**
+     * The largest segment number allowed to be assigned
+     */
     maxSegmentNumber: Number,
   },
 

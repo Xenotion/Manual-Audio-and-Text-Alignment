@@ -56,18 +56,34 @@ import AudioWave from "../components/AudioWave.vue";
 
 const backendService = new BackendService();
 
+
+/**
+ * The editing UI
+ */
 export default {
+  
   name: 'EditingView',
   components: {
     AudioWave, // Register the AudioWave component
   },
   props: {
+    /**
+     * The username of the editor
+     */
     username: {
       type: String,
     },
+
+    /**
+     * The segmented text file
+     */
     textFile: {
       type: Blob,
     },
+
+    /**
+     * The audio file
+     */
     audioFile: {
       type: Blob,
     },
