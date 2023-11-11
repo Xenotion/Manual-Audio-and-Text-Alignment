@@ -26,6 +26,9 @@ Our project aims to simplify this process by creating a web-based audio alignmen
   - [Installation and Setup](#installation-and-setup)
   - [How to Use the Tool](#how-to-use-the-tool)
   - [Key Classes \& Components](#key-classes--components)
+    - [UserInputsView.vue](#userinputsviewvue)
+    - [EditingView.vue](#editingviewvue)
+    - [backendService.ts](#backendservicets)
   - [Contributors](#contributors)
   - [License](#license)
 
@@ -53,11 +56,27 @@ Once the tool is set up and running, you can use it to align audio with text as 
 
 ## Key Classes & Components
 
-- [UserInputsView.vue](src/components/UserInputsView.vue): Vue.js component serves as an interface for user data input, encompassing fields for username, audio, and text files. Notably, the "Next" button triggers the toEditingPage method, responsible for validating inputs and progressing to the editing page. File changes, both for audio and text, are handled by the onAudioFileChanged and onTextFileChanged methods. 
-  
-- [EditingView.vue](src/components/EditingView.vue): Vue.js component serves as the user interface for editing segmented audio data. In the template section, it features a main container with sections for username, audio file visualization using the AudioWave component, and segmented text display. The sidebar lists created segments and provides a button to export segment information. The script section includes methods for formatting text files, counting segments, and exporting segment data to a downloadable text file. The component integrates the AudioWave component for audio visualization and utilizes the BackendService for potential backend interactions. 
-  
-- [backendService.ts](src/services/backendService.ts): designed to interact with a backend API, specifically tailored for fetching project files related to a given project ID. The class employs Axios for making asynchronous HTTP requests, utilizing the getProjectFiles method to retrieve audio and text files from the C-LARA backend. The fetchAudioBlob method efficiently converts an audio URL to a Blob. The interface ProjectFiles structures the expected content, comprising audio and text files. The service employs environment variables, with the API URL dynamically sourced from the .env file. 
+### [UserInputsView.vue](src/components/UserInputsView.vue)
+- Entry point for user data input in Vue.js.
+- Encompasses fields for usernames, audio files, and text files.
+- The "Next" button triggers the `toEditingPage` method for smooth validation and transition.
+- Handles file changes (audio and text) through the `onAudioFileChanged` and `onTextFileChanged` methods.
+
+### [EditingView.vue](src/components/EditingView.vue)
+- Vue.js component for intuitive segmented audio data editing.
+- Template includes sections for usernames, audio file visualization (AudioWave component), and segmented text display.
+- Sidebar lists created segments and offers a button for easy export of segment information.
+- Script section includes methods for text file formatting, segment counting, and exporting segment data.
+- Seamless integration of the AudioWave component for audio visualization.
+- Relies on the BackendService for potential backend interactions.
+
+### [backendService.ts](src/services/backendService.ts)
+- Specifically designed for backend API interaction.
+- Uses Axios for asynchronous HTTP requests.
+- `getProjectFiles` method retrieves audio and text files from the C-LARA backend.
+- `fetchAudioBlob` method efficiently converts audio URLs to Blobs.
+- The `ProjectFiles` interface structures expected content (audio and text files).
+- Smart utilization of environment variables, dynamically sourcing the API URL from the `.env` file for adaptability and maintainability.
 
 ## Contributors
 
