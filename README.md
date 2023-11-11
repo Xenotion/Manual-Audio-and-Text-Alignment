@@ -20,10 +20,14 @@ Our project aims to simplify this process by creating a web-based audio alignmen
 
 ## Table of Contents
 
-1. [Installation and Setup](#installation-and-setup)
-2. [How to Use the Tool](#how-to-use-the-tool)
-3. [Contributors](#contributors)
-4. [License](#license)
+- [Manual Audio/Text Alignment Project for C-LARA](#manual-audiotext-alignment-project-for-c-lara)
+  - [Project Description](#project-description)
+  - [Table of Contents](#table-of-contents)
+  - [Installation and Setup](#installation-and-setup)
+  - [How to Use the Tool](#how-to-use-the-tool)
+  - [Key Classes \& Components](#key-classes--components)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Installation and Setup
 
@@ -45,6 +49,15 @@ Once the tool is set up and running, you can use it to align audio with text as 
 2. **Align Audio:** Manually align segments of audio with corresponding text by assigning segment numbers.
 3. **Generate Output:** Once alignment is complete, choose between downloading the output or uploading it to C-LARA.
 4. **View Aligned Content:** Check the C-LARA platform to see your newly aligned multimedia content.
+
+
+## Key Classes & Components
+
+- [UserInputsView.vue](src\components\UserInputsView.vue): Vue.js component serves as an interface for user data input, encompassing fields for username, audio, and text files. Notably, the "Next" button triggers the toEditingPage method, responsible for validating inputs and progressing to the editing page. File changes, both for audio and text, are handled by the onAudioFileChanged and onTextFileChanged methods. 
+  
+- [EditingView.vue](src\components\EditingView.vue): Vue.js component serves as the user interface for editing segmented audio data. In the template section, it features a main container with sections for username, audio file visualization using the AudioWave component, and segmented text display. The sidebar lists created segments and provides a button to export segment information. The script section includes methods for formatting text files, counting segments, and exporting segment data to a downloadable text file. The component integrates the AudioWave component for audio visualization and utilizes the BackendService for potential backend interactions. 
+  
+- [backendService.ts](src\services\backendService.ts): designed to interact with a backend API, specifically tailored for fetching project files related to a given project ID. The class employs Axios for making asynchronous HTTP requests, utilizing the getProjectFiles method to retrieve audio and text files from the C-LARA backend. The fetchAudioBlob method efficiently converts an audio URL to a Blob. The interface ProjectFiles structures the expected content, comprising audio and text files. The service employs environment variables, with the API URL dynamically sourced from the .env file. 
 
 ## Contributors
 
